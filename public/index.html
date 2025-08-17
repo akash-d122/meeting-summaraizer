@@ -7,6 +7,17 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Navigation -->
+    <nav class="app-navigation" id="app-navigation">
+        <button type="button" id="start-over-btn" class="nav-button">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 7V17C3 18.1046 3.89543 19 5 19H19C20.1046 19 21 18.1046 21 17V7C21 5.89543 20.1046 5 19 5H5C3.89543 5 3 5.89543 3 7Z" stroke="currentColor" stroke-width="2"/>
+                <path d="M8 11L12 15L16 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Upload New File
+        </button>
+    </nav>
+
     <div class="container">
         <header>
             <h1>AI Meeting Summarizer</h1>
@@ -212,6 +223,41 @@
                     <div class="preview-actions">
                         <button type="button" id="edit-email-btn" class="btn btn-secondary">Edit Email</button>
                         <button type="button" id="send-from-preview-btn" class="btn btn-success">Send Email</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Success Section -->
+            <section id="success-section" class="section hidden">
+                <div class="success-container">
+                    <div class="success-icon">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="10" fill="#4caf50"/>
+                            <path d="M9 12L11 14L15 10" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h2>🎉 Email Sent Successfully!</h2>
+                    <p>Your meeting summary has been sent to the specified recipients.</p>
+                    <div class="success-details">
+                        <div class="success-item">
+                            <strong>Recipients:</strong> <span id="success-recipients"></span>
+                        </div>
+                        <div class="success-item">
+                            <strong>Subject:</strong> <span id="success-subject"></span>
+                        </div>
+                        <div class="success-item">
+                            <strong>Sent at:</strong> <span id="success-timestamp"></span>
+                        </div>
+                    </div>
+                    <div class="success-navigation">
+                        <button type="button" id="process-another-btn" class="success-nav-button">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.89 22 5.99 22H18C19.1 22 20 21.1 20 20V8L14 2Z" fill="currentColor"/>
+                                <path d="M14 2V8H20" stroke="white" stroke-width="2" fill="none"/>
+                                <path d="M12 11V17M9 14L12 11L15 14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                            </svg>
+                            Process Another Document
+                        </button>
                     </div>
                 </div>
             </section>

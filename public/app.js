@@ -6,10 +6,12 @@ class MeetingSummarizer {
         this.generatedSummary = null;
         this.sessionToken = localStorage.getItem('sessionToken');
         this.currentTranscript = null;
+        this.workflowStep = 'upload'; // Track workflow progress
 
         this.initializeEventListeners();
         this.showSection('upload-section');
         this.loadExistingSession();
+        this.updateNavigation();
     }
 
     initializeEventListeners() {
@@ -92,6 +94,15 @@ class MeetingSummarizer {
         document.getElementById('generate-btn').addEventListener('click', () => this.generateSummary());
         document.getElementById('edit-btn').addEventListener('click', () => this.toggleEdit());
         document.getElementById('preview-btn').addEventListener('click', () => this.previewSummary());
+
+        // Navigation events
+        document.getElementById('start-over-btn').addEventListener('click', () => {
+            this.startOver();
+        });
+
+        document.getElementById('process-another-btn').addEventListener('click', () => {
+            this.startOver();
+        });
     }
 
     showSection(sectionId) {
@@ -99,10 +110,41 @@ class MeetingSummarizer {
         document.querySelectorAll('.section').forEach(section => {
             section.classList.add('hidden');
         });
-        
+
         // Show target section
         document.getElementById(sectionId).classList.remove('hidden');
         this.currentSection = sectionId;
+
+        // Update workflow step based on section
+        this.updateWorkflowStep(sectionId);
+        this.updateNavigation();
+    }
+
+    /**
+     * Update workflow step based on current section
+     */
+    updateWorkflowStep(sectionId) {
+        switch (sectionId) {
+            case 'upload-section':
+                this.workflowStep = 'upload';
+                break;
+            case 'instructions-section':
+                this.workflowStep = 'instructions';
+                break;
+            case 'summary-section':
+                this.workflowStep = 'summary';
+                break;
+            case 'email-section':
+            case 'email-preview-section':
+                this.workflowStep = 'email';
+                break;
+            case 'success-section':
+                this.workflowStep = 'success';
+                break;
+            default:
+                // Keep current workflow step
+                break;
+        }
     }
 
     showStatus(message, type = 'info') {
@@ -110,10 +152,119 @@ class MeetingSummarizer {
         statusEl.textContent = message;
         statusEl.className = `status-message ${type}`;
         statusEl.classList.remove('hidden');
-        
+
         setTimeout(() => {
             statusEl.classList.add('hidden');
         }, 5000);
+    }
+
+    /**
+     * Update navigation visibility based on current workflow step
+     */
+    updateNavigation() {
+        const navigation = document.getElementById('app-navigation');
+
+        // Show navigation for all steps except upload
+        if (this.workflowStep === 'upload') {
+            navigation.style.display = 'none';
+        } else {
+            navigation.style.display = 'block';
+        }
+    }
+
+    /**
+     * Start over - reset application state and return to upload
+     */
+    startOver() {
+        // Confirm if user wants to start over
+        if (this.workflowStep !== 'upload' && this.workflowStep !== 'success') {
+            const confirmed = confirm('Are you sure you want to start over? Any unsaved progress will be lost.');
+            if (!confirmed) return;
+        }
+
+        // Reset application state
+        this.resetApplicationState();
+
+        // Show upload section
+        this.showSection('upload-section');
+        this.workflowStep = 'upload';
+        this.updateNavigation();
+
+        // Clear status messages
+        document.getElementById('status-message').classList.add('hidden');
+
+        // Show success message
+        this.showStatus('Ready to upload a new document', 'success');
+    }
+
+    /**
+     * Reset all application state
+     */
+    resetApplicationState() {
+        // Clear file data
+        this.uploadedFile = null;
+        this.generatedSummary = null;
+        this.currentTranscript = null;
+
+        // Reset file input
+        const fileInput = document.getElementById('file-input');
+        fileInput.value = '';
+
+        // Reset upload area
+        const uploadArea = document.getElementById('upload-area');
+        uploadArea.classList.remove('dragover', 'uploaded');
+
+        // Reset upload content
+        const uploadContent = uploadArea.querySelector('.upload-content');
+        uploadContent.innerHTML = `
+            <div class="upload-icon">📁</div>
+            <h3>Drop your meeting transcript here</h3>
+            <p>or <button type="button" id="browse-btn" class="browse-btn">browse files</button></p>
+            <small>Supported formats: TXT, MD, DOC, DOCX, PDF, RTF (max 10MB)</small>
+        `;
+
+        // Re-attach browse button event
+        document.getElementById('browse-btn').addEventListener('click', () => fileInput.click());
+
+        // Clear summary content
+        document.getElementById('summary-content').innerHTML = '';
+
+        // Clear email form
+        document.getElementById('email-recipients').value = '';
+        document.getElementById('email-subject').value = '';
+        document.getElementById('email-message').value = '';
+
+        // Reset form states
+        document.getElementById('summary-style').value = 'executive';
+        document.getElementById('custom-instructions').value = '';
+        document.getElementById('email-template').value = 'default';
+
+        // Clear any metadata displays
+        const metadataDiv = document.getElementById('summary-metadata');
+        if (metadataDiv) {
+            metadataDiv.remove();
+        }
+
+        // Reset character counter
+        this.updateCharacterCount(0);
+
+        console.log('🔄 Application state reset');
+    }
+
+    /**
+     * Show success section with email details
+     */
+    showSuccessSection(emailData) {
+        // Update success section with email details
+        document.getElementById('success-recipients').textContent = emailData.recipients || 'N/A';
+        document.getElementById('success-subject').textContent = emailData.subject || 'N/A';
+        document.getElementById('success-timestamp').textContent = new Date().toLocaleString();
+
+        // Show success section
+        this.showSection('success-section');
+
+        // Show status message
+        this.showStatus(`Email sent successfully to ${emailData.recipients}!`, 'success');
     }
 
     handleDragOver(e) {
@@ -923,12 +1074,8 @@ class MeetingSummarizer {
             }
 
             if (result.success) {
-                this.showStatus(`Email sent successfully to ${result.data.recipients} recipient(s)!`, 'success');
-                this.showSection('summary-section');
-
-                // Clear form
-                document.getElementById('email-recipients').value = '';
-                document.getElementById('email-subject').value = '';
+                // Show success section with details
+                this.showSuccessSection(result.data);
             } else {
                 throw new Error(result.error || 'Failed to send email');
             }

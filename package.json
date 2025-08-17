@@ -24,7 +24,12 @@
     "test:processor": "node scripts/test-response-processor.js",
     "test:errors": "node scripts/test-error-handling.js",
     "test:integration": "node scripts/test-integration.js",
-    "test:all": "node scripts/run-all-tests.js"
+    "test:all": "node scripts/run-all-tests.js",
+    "build": "echo 'No build step required for Node.js app'",
+    "postinstall": "echo 'Installation complete'",
+    "prod": "NODE_ENV=production node server.js",
+    "deploy:check": "node scripts/deploy-check.js",
+    "deploy:prepare": "npm run deploy:check && git add . && git status"
   },
   "keywords": [
     "meeting",

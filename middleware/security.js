@@ -177,26 +177,37 @@ const corsConfig = cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (mobile apps, curl, etc.)
     if (!origin) return callback(null, true);
-    
-    // In development, allow localhost
-    if (process.env.NODE_ENV === 'development') {
-      if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
-        return callback(null, true);
-      }
+
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    // In development, allow all localhost origins
+    if (!isProduction) {
+      return callback(null, true);
     }
-    
+
     // In production, check against allowed origins
-    const allowedOrigins = (process.env.ALLOWED_ORIGINS || '').split(',');
+    const allowedOrigins = [
+      process.env.FRONTEND_URL,
+      process.env.CORS_ORIGIN,
+      process.env.BACKEND_URL
+    ].filter(Boolean);
+
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
-    
-    // Default: allow same origin
-    callback(null, true);
+
+    // Allow Railway and Render domains
+    if (origin && (origin.includes('.railway.app') || origin.includes('.onrender.com'))) {
+      return callback(null, true);
+    }
+
+    console.warn(`🚫 CORS blocked origin: ${origin}`);
+    callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
+  optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-Forwarded-For']
 });
 
 /**
