@@ -1,0 +1,609 @@
+%PDF-1.3
+%ºß¬à
+3 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 4 0 R
+>>
+endobj
+4 0 obj
+<<
+/Length 4658
+>>
+stream
+0.5670000000000001 w
+0 G
+BT
+/F1 20 Tf
+23. TL
+0 g
+56.6929133858267775 756.8506299212598378 Td
+(Meeting Transcript - Test Document) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0 g
+56.6929133858267775 700.15771653543311 Td
+(Date: August 17, 2025) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0 g
+56.6929133858267775 671.8112598425196893 Td
+(Meeting: Weekly Team Standup) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 600.9451181102361943 Td
+(ATTENDEES:) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 586.7718897637794271 Td
+(- John Smith \(Project Manager\)) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 572.5986614173227736 Td
+(- Sarah Johnson \(Developer\)) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 558.42543307086612 Td
+(- Mike Chen \(Designer\)) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 544.2522047244094665 Td
+(- Lisa Brown \(QA Engineer\)) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 515.9057480314959321 Td
+(AGENDA:) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 501.7325196850393354 Td
+(1. Project Status Updates) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 487.559291338582625 Td
+(2. Sprint Planning) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 473.3860629921259147 Td
+(3. Technical Challenges) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 459.2128346456692611 Td
+(4. Next Steps) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 430.8663779527558404 Td
+(DISCUSSION:) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 402.5199212598424765 Td
+(John Smith: Good morning everyone. Let's start with our weekly standup. Sarah, can you give us an update on the backend API development?) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 374.1734645669290558 Td
+(Sarah Johnson: Sure, John. I've completed the user authentication endpoints and the data validation middleware. The API is now handling about 95% of our test cases successfully. I'm currently working on the file upload functionality, which should be ready by tomorrow.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 345.8270078740156919 Td
+(Mike Chen: That's great progress, Sarah. From the design perspective, I've finalized the user interface mockups for the dashboard. The new design incorporates the feedback from last week's user testing session. I'll share the updated prototypes with the team after this meeting.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 317.480551181102328 Td
+(Lisa Brown: Thanks, Mike. I've been working on the test automation suite. We now have 85% code coverage, and I've identified a few edge cases that need attention. Sarah, when you finish the file upload feature, I'll need about two days to write comprehensive tests for it.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 289.1340944881889072 Td
+(John Smith: Excellent work, everyone. Let's talk about the upcoming sprint. We have three major features to implement: real-time notifications, advanced search functionality, and the reporting dashboard.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 260.7876377952754865 Td
+(Sarah Johnson: I can take on the real-time notifications. I've been researching WebSocket implementation, and I think we can have a working prototype within a week.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 232.4411811023621794 Td
+(Mike Chen: I'll handle the UI components for both the search functionality and the reporting dashboard. The design system we've built should make this pretty straightforward.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 204.0947244094487587 Td
+(Lisa Brown: I'll focus on creating test scenarios for these new features and updating our regression test suite.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 175.748267716535338 Td
+(TECHNICAL CHALLENGES:) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 147.4018110236219172 Td
+(Sarah Johnson: One challenge I'm facing is with the database performance. As our dataset grows, some queries are taking longer than expected. I'm looking into query optimization and possibly implementing caching.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 119.0553543307086102 Td
+(Mike Chen: On the frontend, we're dealing with some performance issues when rendering large datasets. I'm exploring virtual scrolling and pagination solutions.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 90.7088976377951894 Td
+(Lisa Brown: The main challenge for testing is ensuring cross-browser compatibility, especially with the new file upload feature. We need to test across different browsers and operating systems.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 62.3624409448817687 Td
+(ACTION ITEMS:) Tj
+ET
+endstream
+endobj
+5 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 6 0 R
+>>
+endobj
+6 0 obj
+<<
+/Length 3424
+>>
+stream
+0.5670000000000001 w
+0 G
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 785.1970866141732586 Td
+(1. Sarah: Complete file upload functionality by August 18) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 771.0238582677164914 Td
+(2. Sarah: Research database optimization solutions by August 20) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 756.8506299212598378 Td
+(3. Mike: Share updated UI prototypes with team by end of day) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 742.6774015748030706 Td
+(4. Mike: Implement virtual scrolling for large datasets by August 22) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 728.5041732283464171 Td
+(5. Lisa: Complete test automation for file upload by August 20) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 714.3309448818897636 Td
+(6. Lisa: Set up cross-browser testing environment by August 19) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 700.15771653543311 Td
+(7. John: Schedule user testing session for new features by August 25) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 671.8112598425196893 Td
+(NEXT STEPS:) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 643.4648031496062686 Td
+(- Sprint planning meeting scheduled for August 19 at 2 PM) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 629.291574803149615 Td
+(- Code review session for authentication module on August 18 at 10 AM) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 615.1183464566928478 Td
+(- Design review for dashboard components on August 21 at 3 PM) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 586.7718897637794271 Td
+(MEETING NOTES:) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 558.42543307086612 Td
+(The team discussed the importance of maintaining code quality while meeting deadlines. Everyone agreed to prioritize thorough testing and documentation.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 530.0789763779526993 Td
+(Sarah mentioned that the new authentication system has improved security significantly, with better password hashing and session management.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 501.7325196850393354 Td
+(Mike highlighted that the new design system has reduced development time by approximately 30%, as components are now more reusable.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 473.3860629921259147 Td
+(Lisa emphasized the importance of automated testing, noting that it has caught several critical bugs before they reached production.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 445.0396062992125508 Td
+(DECISIONS MADE:) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 416.69314960629913 Td
+(1. Implement caching solution for database queries) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 402.5199212598424765 Td
+(2. Use virtual scrolling for performance optimization) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 388.3466929133857661 Td
+(3. Prioritize cross-browser testing for file upload feature) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 374.1734645669290558 Td
+(4. Schedule additional user testing session before release) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 345.8270078740156919 Td
+(FOLLOW-UP:) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 317.480551181102328 Td
+(Next meeting scheduled for August 24, 2025 at 9:00 AM.) Tj
+ET
+BT
+/F1 10 Tf
+11.5 TL
+0 g
+56.6929133858267775 289.1340944881889072 Td
+(Meeting adjourned at 10:30 AM.) Tj
+ET
+endstream
+endobj
+1 0 obj
+<</Type /Pages
+/Kids [3 0 R 5 0 R ]
+/Count 2
+>>
+endobj
+7 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+8 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+9 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-Oblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+10 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-BoldOblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+11 0 obj
+<<
+/Type /Font
+/BaseFont /Courier
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+12 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+13 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-Oblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+14 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-BoldOblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+15 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Roman
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+16 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+17 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Italic
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+18 0 obj
+<<
+/Type /Font
+/BaseFont /Times-BoldItalic
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+19 0 obj
+<<
+/Type /Font
+/BaseFont /ZapfDingbats
+/Subtype /Type1
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+20 0 obj
+<<
+/Type /Font
+/BaseFont /Symbol
+/Subtype /Type1
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+2 0 obj
+<<
+/ProcSet [/PDF /Text /ImageB /ImageC /ImageI]
+/Font <<
+/F1 7 0 R
+/F2 8 0 R
+/F3 9 0 R
+/F4 10 0 R
+/F5 11 0 R
+/F6 12 0 R
+/F7 13 0 R
+/F8 14 0 R
+/F9 15 0 R
+/F10 16 0 R
+/F11 17 0 R
+/F12 18 0 R
+/F13 19 0 R
+/F14 20 0 R
+>>
+/XObject <<
+>>
+>>
+endobj
+21 0 obj
+<<
+/Producer (jsPDF 3.0.1)
+/CreationDate (D:20250817185854+05'30')
+>>
+endobj
+22 0 obj
+<<
+/Type /Catalog
+/Pages 1 0 R
+/OpenAction [3 0 R /FitH null]
+/PageLayout /OneColumn
+>>
+endobj
+xref
+0 23
+0000000000 65535 f 
+0000008475 00000 n 
+0000010300 00000 n 
+0000000015 00000 n 
+0000000152 00000 n 
+0000004862 00000 n 
+0000004999 00000 n 
+0000008538 00000 n 
+0000008663 00000 n 
+0000008793 00000 n 
+0000008926 00000 n 
+0000009064 00000 n 
+0000009188 00000 n 
+0000009317 00000 n 
+0000009449 00000 n 
+0000009585 00000 n 
+0000009713 00000 n 
+0000009840 00000 n 
+0000009969 00000 n 
+0000010102 00000 n 
+0000010204 00000 n 
+0000010550 00000 n 
+0000010636 00000 n 
+trailer
+<<
+/Size 23
+/Root 22 0 R
+/Info 21 0 R
+/ID [ <6CA89822052C4074F2C647D6217135C2> <6CA89822052C4074F2C647D6217135C2> ]
+>>
+startxref
+10740
+%%EOF

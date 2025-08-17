@@ -1,0 +1,347 @@
+# Full-Stack AI-Powered Meeting Notes Summarizer and Sharer
+**Product Requirements Document**
+
+**Version:** 1.0  
+**Date:** August 17, 2025  
+**Document Owner:** Product Manager  
+
+---
+
+## 1. Introduction & Background
+
+### 1.1 Product Overview
+The Full-Stack AI-Powered Meeting Notes Summarizer is a complete end-to-end web application that transforms raw meeting transcripts into structured, shareable summaries using AI processing with customizable output formats. The application addresses the time-consuming manual process of creating meeting summaries by automating summary generation while maintaining flexibility for customization and easy distribution.
+
+### 1.2 Business Context
+Organizations spend significant time manually creating meeting summaries for different stakeholders. This application demonstrates practical AI integration in business workflow applications while providing immediate value through automation of routine document processing tasks.
+
+---
+
+## 2. Problem Statement
+
+**Primary Problem:** Manual meeting summary creation is time-consuming and inconsistent, requiring different formats for various audiences (executives, teams, action items) and lacking efficient distribution mechanisms.
+
+**Impact:**
+- Productivity loss from manual summary creation
+- Inconsistent summary quality and format
+- Delayed distribution of meeting outcomes
+- Difficulty in maintaining standardized documentation
+
+---
+
+## 3. Goals & Objectives
+
+### 3.1 Primary Goal
+Build a complete end-to-end web application that automates meeting summary creation with customizable formats and integrated sharing capabilities.
+
+### 3.2 Key Value Propositions
+- **Automation:** Eliminate manual summary creation process
+- **Customization:** Support multiple summary formats tailored to specific audiences
+- **Distribution:** Enable easy sharing via email integration
+- **Flexibility:** Support various input formats and output styles
+- **Integration:** Demonstrate practical AI service integration in business workflows
+
+### 3.3 Learning Outcomes
+- Full-stack development with modern AI service integration
+- API integration and data flow management
+- File processing and email functionality implementation
+- Cost-effective AI model selection and optimization
+- Production-ready application deployment
+
+---
+
+## 4. Key Features & Requirements
+
+### 4.1 File Upload System
+- **Functionality:** Accept text file uploads for meeting transcripts
+- **Supported Formats:** .txt, .md, .doc files
+- **Validation:** File type validation and reasonable size limits
+- **Interface:** Clear upload interface with progress indicators
+- **Error Handling:** Comprehensive error handling for invalid files
+
+### 4.2 Custom Instruction Interface
+- **Input System:** Text input field for AI prompts and instructions
+- **Summary Styles Support:**
+  - Executive bullet points
+  - Action items extraction
+  - Key decisions highlights
+  - Detailed technical summaries
+  - Custom formatting requirements
+- **User Guidance:** Prompt templates and examples
+- **Constraints:** Character/word limits for practical AI processing
+
+### 4.3 AI Processing System
+- **Integration:** Groq platform with llama-3.3-70b-versatile model
+- **Processing:** Handle transcripts up to 131K tokens context
+- **Output:** Generate structured, coherent summaries
+- **Reliability:** Quality validation, error handling, retry mechanisms
+- **Fallback:** Alternative model options for different use cases
+
+### 4.4 Summary Editing Interface
+- **Display:** Present generated summaries in editable format
+- **Editing:** Rich text or textarea editor for modifications
+- **Features:** Real-time editing, save draft functionality
+- **Preview:** Summary preview before sharing
+- **Formatting:** Preservation and customization options
+
+### 4.5 Email Distribution System
+- **Recipients:** Single and multiple email address support
+- **Composition:** Email interface with subject customization
+- **Formatting:** HTML and plain text email options
+- **Confirmation:** Send confirmation and delivery status
+- **Error Handling:** Failed delivery management
+- **Templates:** Email template customization
+
+---
+
+## 5. User Stories / Use Cases
+
+### 5.1 Primary User Flow
+**As a** meeting participant or organizer  
+**I want to** upload a meeting transcript and receive a formatted summary  
+**So that** I can quickly distribute relevant information to stakeholders
+
+### 5.2 Key User Stories
+1. **File Upload:** User uploads meeting transcript file and receives immediate validation feedback
+2. **Custom Instructions:** User specifies summary format requirements and receives AI-generated summary
+3. **Summary Editing:** User reviews and modifies generated summary before distribution
+4. **Email Distribution:** User sends customized summary to multiple recipients with delivery confirmation
+
+### 5.3 Use Cases by Audience
+- **Executives:** High-level bullet point summaries with key decisions
+- **Team Members:** Detailed action items with responsibilities and deadlines
+- **Technical Teams:** Comprehensive technical discussion summaries
+- **General Distribution:** Balanced summaries with highlights and next steps
+
+---
+
+## 6. Technical Architecture
+
+### 6.1 System Components
+- **Frontend:** Basic HTML/CSS/JavaScript or React.js for forms and data display
+- **Backend:** Node.js/Express.js or Python/FastAPI for API and business logic
+- **Database:** PostgreSQL for structured data or MongoDB for document storage
+- **AI Service:** Groq platform integration
+- **Email Service:** SendGrid, AWS SES, or Mailgun integration
+
+### 6.2 Data Models
+- **Meeting Transcripts:** File metadata, content, processing status
+- **Summaries:** Generated content, custom instructions, edit history
+- **Email Records:** Recipients, delivery status, timestamps
+- **User Sessions:** Basic session management for workflow continuity
+
+### 6.3 APIs and Integrations
+- **Groq API:** AI model integration for summary generation
+- **Email Service API:** Programmatic email sending
+- **File Processing:** Text extraction and validation
+- **REST API:** Internal API for frontend-backend communication
+
+### 6.4 Infrastructure Requirements
+- **Development:** Local environment with database and API keys
+- **Production:** Cloud deployment (Heroku, Vercel, AWS) or local server
+- **Security:** Environment variable management, input validation
+- **Monitoring:** Logging and basic performance tracking
+
+---
+
+## 7. Development Roadmap
+
+### 7.1 Phase 1: Foundation and Setup
+**Scope:** Basic infrastructure and core file processing
+- Project initialization and environment setup
+- Database schema design and implementation
+- Basic API structure with routing
+- File upload functionality with validation
+- Basic UI structure for upload interface
+
+**Deliverable:** Working file upload system with basic validation
+
+### 7.2 Phase 2: AI Integration and Processing
+**Scope:** Complete AI processing pipeline
+- Groq API integration with authentication
+- Custom prompt processing logic
+- Summary generation workflow with error handling
+- Quality validation and retry mechanisms
+- Basic summary display interface
+
+**Deliverable:** End-to-end AI processing from upload to summary generation
+
+### 7.3 Phase 3: Summary Management and Editing
+**Scope:** User interaction with generated content
+- Summary display and editing interface
+- Save/draft functionality
+- Preview capabilities
+- User feedback integration
+- Session management for workflow continuity
+
+**Deliverable:** Complete summary editing and management system
+
+### 7.4 Phase 4: Email System and Distribution
+**Scope:** Complete sharing and distribution capabilities
+- Email service integration and configuration
+- Email composition interface
+- Multiple recipient handling
+- Template customization and formatting
+- Delivery confirmation and status tracking
+
+**Deliverable:** Full email distribution system
+
+### 7.5 Phase 5: Testing, Documentation, and Deployment
+**Scope:** Production readiness and quality assurance
+- Comprehensive testing of all features
+- Performance optimization and benchmarking
+- Security review and implementation
+- Complete technical documentation
+- Production deployment preparation
+
+**Deliverable:** Production-ready application with complete documentation
+
+---
+
+## 8. Logical Dependency Chain
+
+### 8.1 Foundation Dependencies
+1. **Environment Setup** → **Database Design** → **Basic API Structure**
+2. **File Upload System** → **File Validation** → **Content Processing**
+3. **Frontend Structure** → **Form Handling** → **User Interface Components**
+
+### 8.2 Integration Dependencies
+1. **API Integration** → **AI Processing** → **Error Handling**
+2. **Summary Generation** → **Content Display** → **Editing Interface**
+3. **Email Service Setup** → **Template Design** → **Distribution Logic**
+
+### 8.3 User Experience Dependencies
+1. **Basic UI** → **Workflow Integration** → **User Feedback Systems**
+2. **Data Persistence** → **Session Management** → **State Handling**
+3. **Preview Functionality** → **Final Formatting** → **Delivery Confirmation**
+
+---
+
+## 9. Assumptions & Constraints
+
+### 9.1 Technical Constraints
+- Frontend must prioritize functionality over visual design
+- No restrictions on technology stack selection
+- Must demonstrate complete end-to-end functionality
+- Focus on backend robustness and API integration quality
+
+### 9.2 Scope Constraints
+- No audio-to-text transcription capabilities
+- No advanced user management systems
+- No real-time collaboration features
+- No calendar or meeting platform integrations
+- No mobile application development
+
+### 9.3 Assumptions
+- Users will provide meeting transcripts in text format
+- Meeting transcripts will be within reasonable size limits (up to 10MB)
+- Users have basic technical literacy for web application usage
+- Email delivery services will be available and reliable
+
+---
+
+## 10. Non-Functional Requirements
+
+### 10.1 Performance Requirements
+- **AI Processing:** Response within 30 seconds for typical meeting transcripts
+- **File Upload:** Support files up to 10MB
+- **Email Delivery:** Send within 60 seconds of user confirmation
+- **Application Responsiveness:** Page loads within 3 seconds
+
+### 10.2 Reliability Requirements
+- **Uptime:** 95% uptime during demonstration period
+- **Error Handling:** Graceful error handling without application crashes
+- **Data Persistence:** Reliable storage for summaries and user inputs
+- **Consistency:** Consistent AI output quality across different transcript types
+
+### 10.3 Security Requirements
+- **API Security:** Secure API key storage using environment variables
+- **Input Validation:** Prevention of injection attacks
+- **File Security:** Secure file upload handling and validation
+- **Email Validation:** Proper email address validation
+- **Rate Limiting:** Basic rate limiting to prevent abuse
+
+---
+
+## 11. Success Metrics
+
+### 11.1 Functional Completeness (40%)
+- All workflow steps function end-to-end without breaks
+- File upload processes various text formats correctly
+- AI integration generates relevant, coherent summaries
+- Email system successfully delivers summaries
+- Error handling prevents application crashes
+
+### 11.2 Technical Implementation Quality (30%)
+- Clean, maintainable, and well-organized codebase
+- Proper API integration with chosen LLM service
+- Robust error handling and edge case management
+- Security best practices implementation
+- Efficient database design and operations
+
+### 11.3 AI Integration Excellence (20%)
+- Appropriate AI model selection with clear justification
+- Cost-effective implementation approach
+- High-quality summary generation meeting user expectations
+- Custom prompt processing reliability
+- Performance optimization for AI service calls
+
+### 11.4 Documentation Quality (10%)
+- Comprehensive technical approach explanation
+- Clear development process documentation
+- Thorough justification of technology choices
+- Accurate setup and deployment instructions
+
+---
+
+## 12. Risks & Mitigation
+
+### 12.1 Technical Challenges
+**Risk:** AI service integration complexity and reliability
+**Mitigation:** Use production-ready models, implement retry mechanisms, include fallback options
+
+**Risk:** File processing edge cases and format variations
+**Mitigation:** Comprehensive validation, error handling, and user feedback systems
+
+**Risk:** Email delivery failures and service limitations
+**Mitigation:** Multiple service provider options, delivery confirmation, retry logic
+
+### 12.2 MVP Development Risks
+**Risk:** Feature scope creep affecting core functionality
+**Mitigation:** Strict adherence to defined scope, functionality-first approach
+
+**Risk:** AI model costs exceeding budget expectations
+**Mitigation:** Use cost-effective Groq models, implement usage monitoring and limits
+
+**Risk:** Integration complexity delaying development
+**Mitigation:** Incremental development approach, early integration testing
+
+### 12.3 Resource Constraints
+**Risk:** Limited time for comprehensive testing and optimization
+**Mitigation:** Focus on core functionality, implement basic testing throughout development
+
+**Risk:** Documentation requirements competing with development time
+**Mitigation:** Document incrementally during development, use clear code organization
+
+---
+
+## 13. References
+
+### 13.1 Technical Specifications
+- **AI Model:** Groq llama-3.3-70b-versatile (production-ready)
+- **Alternative Model:** llama-3.1-8b-instant (budget option)
+- **Context Window:** 131K tokens
+- **Output Capacity:** 32K max output tokens
+- **Cost Estimate:** $0.0315 per 50K token meeting
+
+### 13.2 Development Standards
+- **Code Quality:** Clean, commented, maintainable code
+- **Security:** Input validation, secure API key management
+- **Testing:** Comprehensive feature testing and edge case handling
+- **Documentation:** Technical approach, implementation guide, setup instructions
+
+### 13.3 Deployment Requirements
+- **Environment:** Local development or cloud deployment
+- **Dependencies:** Complete requirements and setup documentation
+- **Configuration:** Environment variables for API keys and services
+- **Monitoring:** Basic logging and performance tracking

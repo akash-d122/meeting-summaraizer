@@ -1,0 +1,88 @@
+<!-- Summary Metadata -->
+<div class="summary-meta">
+    <h3 style="margin: 0 0 10px 0; color: #2c3e50; font-size: 16px;">Summary Information</h3>
+    <div class="meta-grid">
+
+        <div class="meta-item">
+            <span class="meta-label">Style:</span>
+            <span class="meta-value">{{summaryStyle}}</span>
+        </div>
+        <div class="meta-item">
+            <span class="meta-label">Processing Time:</span>
+            <span class="meta-value">{{processingTime}}s</span>
+        </div>
+        <div class="meta-item">
+            <span class="meta-label">Cost:</span>
+            <span class="meta-value">${{cost}}</span>
+        </div>
+        <div class="meta-item">
+            <span class="meta-label">Tokens:</span>
+            <span class="meta-value">{{tokens}}</span>
+        </div>
+        <div class="meta-item">
+            <span class="meta-label">Model:</span>
+            <span class="meta-value">{{model}}</span>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Instructions (if provided) -->
+{{#if customInstructions}}
+<div style="background-color: #e3f2fd; border-left: 4px solid #2196f3; padding: 15px; margin-bottom: 25px; border-radius: 4px;">
+    <h4 style="margin: 0 0 8px 0; color: #1976d2; font-size: 14px;">Custom Instructions Applied:</h4>
+    <p style="margin: 0; font-style: italic; color: #424242;">{{customInstructions}}</p>
+</div>
+{{/if}}
+
+<!-- Summary Content -->
+<div class="summary-content">
+    {{{summaryContent}}}
+</div>
+
+<!-- Action Items Highlight (if any) -->
+{{#if actionItems}}
+<div class="action-items">
+    <h4>⚡ Key Action Items</h4>
+    <ul style="margin: 0; padding-left: 20px;">
+        {{#each actionItems}}
+        <li style="margin: 5px 0;">
+            <strong>{{owner}}:</strong> {{task}}
+            {{#if deadline}}<em>(Due: {{deadline}})</em>{{/if}}
+        </li>
+        {{/each}}
+    </ul>
+</div>
+{{/if}}
+
+<!-- Additional Information -->
+{{#if additionalNotes}}
+<div style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; margin-top: 25px;">
+    <h4 style="margin: 0 0 10px 0; color: #495057; font-size: 14px;">📋 Additional Notes</h4>
+    <p style="margin: 0; font-size: 12px; color: #495057; line-height: 1.4;">{{additionalNotes}}</p>
+</div>
+{{/if}}
+
+<!-- File Information -->
+<div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef;">
+    <h4 style="margin: 0 0 10px 0; color: #6c757d; font-size: 12px; text-transform: uppercase;">Source Information</h4>
+    <div style="font-size: 12px; color: #6c757d;">
+        <p style="margin: 2px 0;"><strong>Original File:</strong> {{originalFileName}}</p>
+        <p style="margin: 2px 0;"><strong>File Size:</strong> {{fileSize}}</p>
+        <p style="margin: 2px 0;"><strong>Content Length:</strong> {{contentLength}} characters</p>
+        <p style="margin: 2px 0;"><strong>Generated:</strong> {{generatedAt}}</p>
+        {{#if sessionId}}
+        <p style="margin: 2px 0;"><strong>Session ID:</strong> {{sessionId}}</p>
+        {{/if}}
+    </div>
+</div>
+
+<!-- Call to Action -->
+<div style="text-align: center; margin-top: 30px; padding: 20px; background-color: #f8f9fa; border-radius: 6px;">
+    <h4 style="margin: 0 0 10px 0; color: #2c3e50;">Need to make changes?</h4>
+    <p style="margin: 0 0 15px 0; font-size: 14px; color: #6c757d;">
+        You can regenerate this summary with different settings or upload a new transcript.
+    </p>
+    <a href="{{appUrl}}" style="display: inline-block; background-color: #3498db; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-weight: 600;">
+        Open Meeting Summarizer
+    </a>
+</div>
