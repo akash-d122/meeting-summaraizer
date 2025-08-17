@@ -183,7 +183,7 @@ const startServer = async () => {
     // Start server
     app.listen(PORT, () => {
       console.log('✅ Database connected and synchronized');
-      console.log(`🚀 Meeting Summarizer server running on port ${PORT}`);
+      console.log(`🚀 Meeting Summarizer server running on port ${PORT} (Production Ready)`);
       console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(`🔗 Health check: http://localhost:${PORT}/health`);
       console.log(`💾 Database: PostgreSQL`);

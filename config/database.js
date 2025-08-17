@@ -56,7 +56,20 @@ const env = process.env.NODE_ENV || 'development';
 const dbConfig = config[env];
 
 let sequelize;
-if (dbConfig.use_env_variable) {
+
+// For production or when DATABASE_URL is provided, use PostgreSQL
+if (process.env.DATABASE_URL || env === 'production') {
+  const productionConfig = config.production;
+  sequelize = new Sequelize(process.env.DATABASE_URL, {
+    ...productionConfig,
+    dialectOptions: {
+      ssl: process.env.DB_SSL !== 'false' ? {
+        require: true,
+        rejectUnauthorized: false
+      } : false
+    }
+  });
+} else if (dbConfig.use_env_variable) {
   sequelize = new Sequelize(process.env[dbConfig.use_env_variable], dbConfig);
 } else {
   sequelize = new Sequelize(
