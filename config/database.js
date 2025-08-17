@@ -4,8 +4,8 @@ require('dotenv').config();
 // Database configuration
 const config = {
   development: {
-    // Use SQLite for development if PostgreSQL is not available
-    dialect: process.env.DB_DIALECT || 'sqlite',
+    // Use PostgreSQL for development (fallback to SQLite if needed)
+    dialect: process.env.DB_DIALECT || (process.env.DATABASE_URL ? 'postgres' : 'sqlite'),
     storage: process.env.DB_STORAGE || './database/meeting_summarizer_dev.sqlite',
     // PostgreSQL configuration (when available)
     username: process.env.DB_USERNAME || 'postgres',
@@ -22,8 +22,12 @@ const config = {
     }
   },
   test: {
-    dialect: 'sqlite',
-    storage: ':memory:', // In-memory database for testing
+    dialect: 'postgres',
+    database: 'meeting_summarizer_test',
+    username: 'postgres',
+    password: 'password',
+    host: 'localhost',
+    port: 5432,
     logging: false,
     pool: {
       max: 5,
@@ -43,7 +47,7 @@ const config = {
       idle: 10000
     },
     dialectOptions: {
-      ssl: process.env.DB_SSL === 'true' ? {
+      ssl: process.env.DB_SSL !== 'false' ? {
         require: true,
         rejectUnauthorized: false
       } : false

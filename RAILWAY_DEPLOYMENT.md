@@ -8,24 +8,31 @@ The deployment was failing due to:
 2. **Environment Configuration**: NODE_ENV not set to production
 3. **Database Configuration**: Falling back to SQLite instead of PostgreSQL
 4. **Build Process**: Missing proper rebuild of native modules
+5. **Build Timeout**: npm rebuild taking too long during postinstall
 
 ## Changes Made
 
 ### 1. Package.json Updates
-- Added `sqlite3` as explicit dependency for development
-- Updated build commands to rebuild native modules
+- Moved `sqlite3` to devDependencies (only needed for local development)
+- Removed `postinstall` script that was causing build timeouts
+- Simplified build process
 
 ### 2. Railway Configuration (railway.json)
-- Updated build command: `npm ci --only=production && npm rebuild`
+- Updated build command: `npm ci --omit=dev` (faster, production-only install)
 - Updated start command: `NODE_ENV=production npm start`
-- This ensures native modules are rebuilt for the target platform
+- Removed rebuild step that was causing timeouts
 
-### 3. Database Configuration
+### 3. Nixpacks Configuration (nixpacks.toml)
+- Added explicit Nixpacks configuration for optimized builds
+- Ensures consistent Node.js version and faster installs
+
+### 4. Database Configuration
 - Enhanced database.js to properly handle production environment
 - Added explicit PostgreSQL configuration when DATABASE_URL is present
 - Improved SSL handling for Railway PostgreSQL
+- Removed SQLite dependency from production builds
 
-### 4. Environment Variables
+### 5. Environment Variables
 - Created .env.production template
 - Updated Procfile to set NODE_ENV=production
 
