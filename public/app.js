@@ -642,7 +642,7 @@ class MeetingSummarizer {
     }
 
     /**
-     * Display summary metadata (quality, cost, etc.)
+     * Display summary metadata (cost, processing time, etc.)
      */
     displaySummaryMetadata(summary) {
         // Create or update metadata display
@@ -652,24 +652,13 @@ class MeetingSummarizer {
             metadataDiv.id = 'summary-metadata';
             metadataDiv.className = 'summary-metadata';
 
-            const summaryContainer = document.querySelector('.summary-container');
-            summaryContainer.insertBefore(metadataDiv, summaryContainer.firstChild);
+            const summaryContent = document.getElementById('summary-content');
+            summaryContent.parentNode.insertBefore(metadataDiv, summaryContent);
         }
 
         let metadataHTML = '<div class="metadata-grid">';
 
-        // Quality information
-        if (summary.quality) {
-            const qualityColor = this.getQualityColor(summary.quality.grade);
-            metadataHTML += `
-                <div class="metadata-item">
-                    <span class="metadata-label">Quality:</span>
-                    <span class="metadata-value quality-${summary.quality.grade.toLowerCase()}" style="color: ${qualityColor}">
-                        ${summary.quality.grade} (${Math.round(summary.quality.score * 100)}%)
-                    </span>
-                </div>
-            `;
-        }
+        // Note: Quality information removed from display but still calculated in backend
 
         // Processing information
         if (summary.processingTime) {
@@ -716,17 +705,14 @@ class MeetingSummarizer {
     }
 
     /**
-     * Get color for quality grade
+     * Format file size for display
      */
-    getQualityColor(grade) {
-        const colors = {
-            'A': '#28a745',
-            'B': '#6f42c1',
-            'C': '#fd7e14',
-            'D': '#dc3545',
-            'F': '#6c757d'
-        };
-        return colors[grade] || '#6c757d';
+    formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 
     toggleEdit() {
@@ -819,9 +805,9 @@ class MeetingSummarizer {
     updateTemplateDescription() {
         const template = document.getElementById('email-template').value;
         const descriptions = {
-            'default': 'Comprehensive template with full metadata, quality insights, and detailed formatting.',
+            'default': 'Comprehensive template with full metadata and detailed formatting.',
             'professional': 'Executive-style template optimized for business communications with clean layout.',
-            'minimal': 'Clean and simple template focusing on content with minimal metadata.'
+            'minimal': 'Clean and simple template focusing on content with essential metadata.'
         };
 
         // You could add a description element if needed
