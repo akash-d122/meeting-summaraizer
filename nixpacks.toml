@@ -2,7 +2,7 @@
 nixPkgs = ["nodejs_22", "npm-9_x"]
 
 [phases.install]
-cmds = ["npm ci --omit=dev"]
+cmds = ["npm ci --omit=dev --cache /tmp/.npm"]
 
 [phases.build]
 cmds = ["echo 'Build phase completed'"]
