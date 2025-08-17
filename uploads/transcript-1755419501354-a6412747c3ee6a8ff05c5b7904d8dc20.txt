@@ -1,5 +1,0 @@
-Meeting Notes - Instructions API Test
-Date: August 17, 2025
-
-This is a test transcript for testing the instructions API functionality.
-It contains sample meeting content for AI processing.
