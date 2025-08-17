@@ -9,18 +9,18 @@ const {
 
 // Test Groq API credentials and configuration
 const testGroqCredentials = async () => {
-  console.log('🔑 Testing Groq API Credentials and Configuration...\n');
+  console.log('🔑 Testing Groq API Credentials and Configuration (Modern SDK)...\n');
 
   try {
     // Step 1: Validate configuration
     console.log('1️⃣ Validating Groq configuration...');
     const validation = validateGroqConfig();
-    
+
     console.log(`   Configuration status: ${validation.isValid ? '✅ Valid' : '❌ Invalid'}`);
     console.log(`   API Key: ${validation.config.apiKey}`);
     console.log(`   Primary Model: ${validation.config.primaryModel}`);
     console.log(`   Fallback Model: ${validation.config.fallbackModel}`);
-    console.log(`   Base URL: ${validation.config.baseURL}`);
+    console.log(`   SDK Version: ${validation.config.sdkVersion}`);
     console.log(`   Timeout: ${validation.config.timeout}ms`);
 
     if (validation.errors.length > 0) {
@@ -47,27 +47,32 @@ const testGroqCredentials = async () => {
     const connectionTest = await testGroqConnection();
     
     if (connectionTest.success) {
-      console.log('   ✅ API connection successful');
+      console.log('   ✅ API connection successful (modern SDK)');
       console.log(`   📝 Response: "${connectionTest.response}"`);
       console.log(`   🤖 Model: ${connectionTest.model}`);
-      
+      console.log(`   🆔 Request ID: ${connectionTest.id}`);
+
       if (connectionTest.usage) {
         console.log(`   🔢 Token usage:`);
         console.log(`      • Input tokens: ${connectionTest.usage.prompt_tokens}`);
         console.log(`      • Output tokens: ${connectionTest.usage.completion_tokens}`);
         console.log(`      • Total tokens: ${connectionTest.usage.total_tokens}`);
-        
+
         const cost = calculateCost(connectionTest.usage, 'primary');
         console.log(`      • Estimated cost: $${cost.toFixed(6)}`);
       }
     } else {
       console.log('   ❌ API connection failed');
       console.log(`   Error: ${connectionTest.error}`);
-      
+
+      if (connectionTest.status) {
+        console.log(`   HTTP Status: ${connectionTest.status}`);
+      }
+
       if (connectionTest.details) {
         console.log(`   Details: ${JSON.stringify(connectionTest.details, null, 2)}`);
       }
-      
+
       return false;
     }
 

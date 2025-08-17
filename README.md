@@ -40,6 +40,7 @@ A full-stack web application that transforms meeting transcripts into structured
    ```
 
    **📋 For detailed Groq API setup**: See [docs/GROQ_SETUP.md](docs/GROQ_SETUP.md)
+   **🧠 For prompt engineering details**: See [docs/PROMPT_ENGINEERING.md](docs/PROMPT_ENGINEERING.md)
 
 4. **Create required directories**
    ```bash

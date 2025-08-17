@@ -41,8 +41,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: true,
       validate: {
-        isIn: [['text/plain', 'text/markdown', 'application/msword', 
-                'application/vnd.openxmlformats-officedocument.wordprocessingml.document']]
+        isIn: [['text/plain', 'text/markdown', 'application/msword',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'application/pdf', 'application/rtf', 'text/rtf',
+                'application/vnd.ms-word', 'application/x-msword']]
       }
     },
     content: {

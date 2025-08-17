@@ -1,0 +1,431 @@
+[
+  {
+    "id": "err_1755428079594_ep8b478pm",
+    "timestamp": "2025-08-17T10:54:39.594Z",
+    "originalError": {
+      "status": 500,
+      "type": "API_ERROR"
+    },
+    "message": "API request failed",
+    "stack": "Error: API request failed\n    at testErrorHandling (D:\\meeting-summaraizer\\scripts\\test-error-handling.js:128:21)\n    at Object.<anonymous> (D:\\meeting-summaraizer\\scripts\\test-error-handling.js:334:3)\n    at Module._compile (node:internal/modules/cjs/loader:1730:14)\n    at Object..js (node:internal/modules/cjs/loader:1895:10)\n    at Module.load (node:internal/modules/cjs/loader:1465:32)\n    at Function._load (node:internal/modules/cjs/loader:1282:12)\n    at TracingChannel.traceSync (node:diagnostics_channel:322:14)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)\n    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)\n    at node:internal/main/run_main_module:36:49",
+    "context": {
+      "component": "SummaryService",
+      "operation": "generateSummary",
+      "transcriptId": "transcript-123",
+      "sessionId": "session-456",
+      "userId": "user-789",
+      "summaryStyle": "executive",
+      "customInstructions": "Focus on key decisions"
+    },
+    "type": "SERVICE_UNAVAILABLE",
+    "severity": "high",
+    "retryable": true,
+    "component": "SummaryService",
+    "operation": "generateSummary",
+    "userId": "user-789",
+    "sessionId": "session-456",
+    "transcriptId": "transcript-123"
+  },
+  {
+    "id": "err_1755428079598_95mmtkne8",
+    "timestamp": "2025-08-17T10:54:39.598Z",
+    "originalError": {
+      "code": "ECONNREFUSED",
+      "type": "NETWORK_ERROR"
+    },
+    "message": "Network connection failed",
+    "stack": "Error: Network connection failed\n    at testErrorHandling (D:\\meeting-summaraizer\\scripts\\test-error-handling.js:128:21)",
+    "context": {
+      "component": "SummaryService",
+      "operation": "generateSummary",
+      "transcriptId": "transcript-123",
+      "sessionId": "session-456",
+      "userId": "user-789",
+      "summaryStyle": "executive",
+      "customInstructions": "Focus on key decisions"
+    },
+    "type": "NETWORK_ERROR",
+    "severity": "medium",
+    "retryable": true,
+    "component": "SummaryService",
+    "operation": "generateSummary",
+    "userId": "user-789",
+    "sessionId": "session-456",
+    "transcriptId": "transcript-123"
+  },
+  {
+    "id": "err_1755428079600_r0zzfyy5a",
+    "timestamp": "2025-08-17T10:54:39.600Z",
+    "originalError": {
+      "status": 429,
+      "type": "RATE_LIMIT_ERROR"
+    },
+    "message": "Rate limit exceeded",
+    "stack": "Error: Rate limit exceeded\n    at testErrorHandling (D:\\meeting-summaraizer\\scripts\\test-error-handling.js:128:21)",
+    "context": {
+      "component": "SummaryService",
+      "operation": "generateSummary",
+      "transcriptId": "transcript-123",
+      "sessionId": "session-456",
+      "userId": "user-789",
+      "summaryStyle": "executive",
+      "customInstructions": "Focus on key decisions"
+    },
+    "type": "RATE_LIMIT_ERROR",
+    "severity": "medium",
+    "retryable": true,
+    "component": "SummaryService",
+    "operation": "generateSummary",
+    "userId": "user-789",
+    "sessionId": "session-456",
+    "transcriptId": "transcript-123"
+  },
+  {
+    "id": "err_1755428079602_nrd252ecz",
+    "timestamp": "2025-08-17T10:54:39.602Z",
+    "originalError": {
+      "status": 401,
+      "type": "AUTHENTICATION_ERROR"
+    },
+    "message": "Authentication failed",
+    "stack": "Error: Authentication failed\n    at testErrorHandling (D:\\meeting-summaraizer\\scripts\\test-error-handling.js:128:21)",
+    "context": {
+      "component": "SummaryService",
+      "operation": "generateSummary",
+      "transcriptId": "transcript-123",
+      "sessionId": "session-456",
+      "userId": "user-789",
+      "summaryStyle": "executive",
+      "customInstructions": "Focus on key decisions"
+    },
+    "type": "AUTHENTICATION_ERROR",
+    "severity": "critical",
+    "retryable": false,
+    "component": "SummaryService",
+    "operation": "generateSummary",
+    "userId": "user-789",
+    "sessionId": "session-456",
+    "transcriptId": "transcript-123"
+  },
+  {
+    "id": "err_1755428079604_g81zjuxkd",
+    "timestamp": "2025-08-17T10:54:39.604Z",
+    "originalError": {
+      "name": "ValidationError",
+      "type": "VALIDATION_ERROR"
+    },
+    "message": "Invalid input data",
+    "stack": "ValidationError: Invalid input data\n    at testErrorHandling (D:\\meeting-summaraizer\\scripts\\test-error-handling.js:128:21)",
+    "context": {
+      "component": "SummaryService",
+      "operation": "generateSummary",
+      "transcriptId": "transcript-123",
+      "sessionId": "session-456",
+      "userId": "user-789",
+      "summaryStyle": "executive",
+      "customInstructions": "Focus on key decisions"
+    },
+    "type": "VALIDATION_ERROR",
+    "severity": "low",
+    "retryable": false,
+    "component": "SummaryService",
+    "operation": "generateSummary",
+    "userId": "user-789",
+    "sessionId": "session-456",
+    "transcriptId": "transcript-123"
+  },
+  {
+    "id": "err_1755428079607_24hhrn3h7",
+    "timestamp": "2025-08-17T10:54:39.607Z",
+    "originalError": {
+      "code": "ETIMEDOUT",
+      "type": "TIMEOUT_ERROR"
+    },
+    "message": "Request timeout occurred",
+    "stack": "Error: Request timeout occurred\n    at testErrorHandling (D:\\meeting-summaraizer\\scripts\\test-error-handling.js:128:21)",
+    "context": {
+      "component": "SummaryService",
+      "operation": "generateSummary",
+      "transcriptId": "transcript-123",
+      "sessionId": "session-456",
+      "userId": "user-789",
+      "summaryStyle": "executive",
+      "customInstructions": "Focus on key decisions"
+    },
+    "type": "TIMEOUT_ERROR",
+    "severity": "medium",
+    "retryable": true,
+    "component": "SummaryService",
+    "operation": "generateSummary",
+    "userId": "user-789",
+    "sessionId": "session-456",
+    "transcriptId": "transcript-123"
+  },
+  {
+    "id": "err_1755428079611_1dp8jhhoj",
+    "timestamp": "2025-08-17T10:54:39.611Z",
+    "originalError": {
+      "name": "SequelizeError",
+      "type": "DATABASE_ERROR"
+    },
+    "message": "Database connection failed",
+    "stack": "SequelizeError: Database connection failed\n    at testErrorHandling (D:\\meeting-summaraizer\\scripts\\test-error-handling.js:128:21)",
+    "context": {
+      "component": "SummaryService",
+      "operation": "generateSummary",
+      "transcriptId": "transcript-123",
+      "sessionId": "session-456",
+      "userId": "user-789",
+      "summaryStyle": "executive",
+      "customInstructions": "Focus on key decisions"
+    },
+    "type": "DATABASE_ERROR",
+    "severity": "critical",
+    "retryable": false,
+    "component": "SummaryService",
+    "operation": "generateSummary",
+    "userId": "user-789",
+    "sessionId": "session-456",
+    "transcriptId": "transcript-123"
+  },
+  {
+    "id": "err_1755428079614_h9m2q5my9",
+    "timestamp": "2025-08-17T10:54:39.614Z",
+    "originalError": {
+      "type": "CONTENT_ERROR"
+    },
+    "message": "Content is empty or invalid",
+    "stack": "Error: Content is empty or invalid\n    at testErrorHandling (D:\\meeting-summaraizer\\scripts\\test-error-handling.js:128:21)",
+    "context": {
+      "component": "SummaryService",
+      "operation": "generateSummary",
+      "transcriptId": "transcript-123",
+      "sessionId": "session-456",
+      "userId": "user-789",
+      "summaryStyle": "executive",
+      "customInstructions": "Focus on key decisions"
+    },
+    "type": "CONTENT_ERROR",
+    "severity": "low",
+    "retryable": false,
+    "component": "SummaryService",
+    "operation": "generateSummary",
+    "userId": "user-789",
+    "sessionId": "session-456",
+    "transcriptId": "transcript-123"
+  },
+  {
+    "id": "err_1755428079619_pnw2tldi1",
+    "timestamp": "2025-08-17T10:54:39.619Z",
+    "originalError": {
+      "status": 500,
+      "type": "API_ERROR"
+    },
+    "message": "API request failed",
+    "stack": "Error: API request failed\n    at testErrorHandling (D:\\meeting-summaraizer\\scripts\\test-error-handling.js:187:21)",
+    "context": {
+      "component": "SummaryService",
+      "operation": "generateSummary",
+      "transcriptId": "transcript-123",
+      "sessionId": "session-456",
+      "userId": "user-789",
+      "summaryStyle": "executive",
+      "customInstructions": "Focus on key decisions"
+    },
+    "type": "SERVICE_UNAVAILABLE",
+    "severity": "high",
+    "retryable": true,
+    "component": "SummaryService",
+    "operation": "generateSummary",
+    "userId": "user-789",
+    "sessionId": "session-456",
+    "transcriptId": "transcript-123"
+  },
+  {
+    "id": "err_1755428079620_id3y4ypyk",
+    "timestamp": "2025-08-17T10:54:39.620Z",
+    "originalError": {
+      "code": "ECONNREFUSED",
+      "type": "NETWORK_ERROR"
+    },
+    "message": "Network connection failed",
+    "stack": "Error: Network connection failed\n    at testErrorHandling (D:\\meeting-summaraizer\\scripts\\test-error-handling.js:187:21)",
+    "context": {
+      "component": "SummaryService",
+      "operation": "generateSummary",
+      "transcriptId": "transcript-123",
+      "sessionId": "session-456",
+      "userId": "user-789",
+      "summaryStyle": "executive",
+      "customInstructions": "Focus on key decisions"
+    },
+    "type": "NETWORK_ERROR",
+    "severity": "medium",
+    "retryable": true,
+    "component": "SummaryService",
+    "operation": "generateSummary",
+    "userId": "user-789",
+    "sessionId": "session-456",
+    "transcriptId": "transcript-123"
+  },
+  {
+    "id": "err_1755428079620_rln30s0sy",
+    "timestamp": "2025-08-17T10:54:39.620Z",
+    "originalError": {
+      "status": 500,
+      "type": "API_ERROR"
+    },
+    "message": "API request failed",
+    "stack": "Error: API request failed\n    at testErrorHandling (D:\\meeting-summaraizer\\scripts\\test-error-handling.js:187:21)",
+    "context": {
+      "component": "SummaryService",
+      "operation": "generateSummary",
+      "transcriptId": "transcript-123",
+      "sessionId": "session-456",
+      "userId": "user-789",
+      "summaryStyle": "executive",
+      "customInstructions": "Focus on key decisions"
+    },
+    "type": "SERVICE_UNAVAILABLE",
+    "severity": "high",
+    "retryable": true,
+    "component": "SummaryService",
+    "operation": "generateSummary",
+    "userId": "user-789",
+    "sessionId": "session-456",
+    "transcriptId": "transcript-123"
+  },
+  {
+    "id": "err_1755428079621_df20ilnkf",
+    "timestamp": "2025-08-17T10:54:39.621Z",
+    "originalError": {
+      "status": 429,
+      "type": "RATE_LIMIT_ERROR"
+    },
+    "message": "Rate limit exceeded",
+    "stack": "Error: Rate limit exceeded\n    at testErrorHandling (D:\\meeting-summaraizer\\scripts\\test-error-handling.js:187:21)",
+    "context": {
+      "component": "SummaryService",
+      "operation": "generateSummary",
+      "transcriptId": "transcript-123",
+      "sessionId": "session-456",
+      "userId": "user-789",
+      "summaryStyle": "executive",
+      "customInstructions": "Focus on key decisions"
+    },
+    "type": "RATE_LIMIT_ERROR",
+    "severity": "medium",
+    "retryable": true,
+    "component": "SummaryService",
+    "operation": "generateSummary",
+    "userId": "user-789",
+    "sessionId": "session-456",
+    "transcriptId": "transcript-123"
+  },
+  {
+    "id": "err_1755428079621_zbkcyi6w4",
+    "timestamp": "2025-08-17T10:54:39.621Z",
+    "originalError": {
+      "name": "ValidationError",
+      "type": "VALIDATION_ERROR"
+    },
+    "message": "Invalid input data",
+    "stack": "ValidationError: Invalid input data\n    at testErrorHandling (D:\\meeting-summaraizer\\scripts\\test-error-handling.js:187:21)",
+    "context": {
+      "component": "SummaryService",
+      "operation": "generateSummary",
+      "transcriptId": "transcript-123",
+      "sessionId": "session-456",
+      "userId": "user-789",
+      "summaryStyle": "executive",
+      "customInstructions": "Focus on key decisions"
+    },
+    "type": "VALIDATION_ERROR",
+    "severity": "low",
+    "retryable": false,
+    "component": "SummaryService",
+    "operation": "generateSummary",
+    "userId": "user-789",
+    "sessionId": "session-456",
+    "transcriptId": "transcript-123"
+  },
+  {
+    "id": "err_1755428079622_l2svefzev",
+    "timestamp": "2025-08-17T10:54:39.622Z",
+    "originalError": {
+      "status": 500,
+      "type": "API_ERROR"
+    },
+    "message": "API request failed",
+    "stack": "Error: API request failed\n    at testErrorHandling (D:\\meeting-summaraizer\\scripts\\test-error-handling.js:187:21)",
+    "context": {
+      "component": "SummaryService",
+      "operation": "generateSummary",
+      "transcriptId": "transcript-123",
+      "sessionId": "session-456",
+      "userId": "user-789",
+      "summaryStyle": "executive",
+      "customInstructions": "Focus on key decisions"
+    },
+    "type": "SERVICE_UNAVAILABLE",
+    "severity": "high",
+    "retryable": true,
+    "component": "SummaryService",
+    "operation": "generateSummary",
+    "userId": "user-789",
+    "sessionId": "session-456",
+    "transcriptId": "transcript-123"
+  },
+  {
+    "id": "err_1755428079625_rkgc8bxt3",
+    "timestamp": "2025-08-17T10:54:39.625Z",
+    "originalError": {
+      "status": 500,
+      "type": "API_ERROR"
+    },
+    "message": "API request failed",
+    "stack": "Error: API request failed\n    at testErrorHandling (D:\\meeting-summaraizer\\scripts\\test-error-handling.js:214:21)",
+    "context": {
+      "component": "GroqAPI",
+      "operation": "chatCompletion",
+      "model": "llama-3.3-70b-versatile",
+      "tokens": 1500,
+      "sessionId": "session-456"
+    },
+    "type": "SERVICE_UNAVAILABLE",
+    "severity": "high",
+    "retryable": true,
+    "component": "GroqAPI",
+    "operation": "chatCompletion",
+    "userId": "anonymous",
+    "sessionId": "session-456",
+    "transcriptId": null
+  },
+  {
+    "id": "err_1755428079627_6pg78e1zp",
+    "timestamp": "2025-08-17T10:54:39.627Z",
+    "originalError": {
+      "type": "PROCESSING_ERROR",
+      "status": 500
+    },
+    "message": "Integration test error",
+    "stack": "Error: Integration test error\n    at testErrorHandling (D:\\meeting-summaraizer\\scripts\\test-error-handling.js:254:23)",
+    "context": {
+      "component": "SummaryService",
+      "operation": "generateSummary",
+      "transcriptId": "transcript-123",
+      "sessionId": "session-456",
+      "userId": "user-789",
+      "summaryStyle": "executive",
+      "customInstructions": "Focus on key decisions"
+    },
+    "type": "SERVICE_UNAVAILABLE",
+    "severity": "high",
+    "retryable": true,
+    "component": "SummaryService",
+    "operation": "generateSummary",
+    "userId": "user-789",
+    "sessionId": "session-456",
+    "transcriptId": "transcript-123"
+  }
+]

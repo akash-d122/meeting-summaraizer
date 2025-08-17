@@ -1,10 +1,10 @@
 const Groq = require('groq-sdk');
 require('dotenv').config();
 
-// Groq API Configuration
+// Groq API Configuration (modern SDK approach)
 const groqConfig = {
   apiKey: process.env.GROQ_API_KEY,
-  baseURL: process.env.GROQ_BASE_URL || 'https://api.groq.com/openai/v1',
+  // Note: Modern groq-sdk handles baseURL automatically
   timeout: parseInt(process.env.GROQ_TIMEOUT) || 30000,
   maxRetries: 3
 };
@@ -33,7 +33,7 @@ const modelConfig = {
   }
 };
 
-// Initialize Groq client
+// Initialize Groq client (modern SDK approach)
 let groqClient = null;
 
 const initializeGroqClient = () => {
@@ -46,17 +46,15 @@ const initializeGroqClient = () => {
       throw new Error('Please set a valid GROQ_API_KEY in your environment variables');
     }
 
+    // Modern groq-sdk initialization - minimal configuration
     groqClient = new Groq({
-      apiKey: groqConfig.apiKey,
-      baseURL: groqConfig.baseURL,
-      timeout: groqConfig.timeout,
-      maxRetries: groqConfig.maxRetries
+      apiKey: groqConfig.apiKey
     });
 
-    console.log('✅ Groq client initialized successfully');
+    console.log('✅ Groq client initialized successfully (modern SDK)');
     console.log(`📊 Primary model: ${modelConfig.primary.name}`);
     console.log(`🔄 Fallback model: ${modelConfig.fallback.name}`);
-    
+
     return groqClient;
   } catch (error) {
     console.error('❌ Failed to initialize Groq client:', error.message);
@@ -72,45 +70,58 @@ const getGroqClient = () => {
   return groqClient;
 };
 
-// Test API connection
+// Test API connection (modern SDK approach)
 const testGroqConnection = async () => {
   try {
-    const client = getGroqClient();
-    
-    // Make a simple test request
-    const testResponse = await client.chat.completions.create({
+    const groq = getGroqClient();
+
+    // Modern SDK approach - simplified API call
+    const completion = await groq.chat.completions.create({
+      model: modelConfig.primary.name,
       messages: [
         {
-          role: 'user',
-          content: 'Hello! Please respond with just "Connection successful" to test the API.'
+          role: "user",
+          content: "Hello! Please respond with just 'Connection successful' to test the API."
         }
       ],
-      model: modelConfig.primary.name,
       max_tokens: 50,
       temperature: 0
     });
 
-    const responseText = testResponse.choices[0]?.message?.content?.trim();
-    
+    const responseText = completion.choices[0]?.message?.content?.trim();
+
     if (responseText) {
-      console.log('✅ Groq API connection test successful');
+      console.log('✅ Groq API connection test successful (modern SDK)');
       console.log(`📝 Test response: "${responseText}"`);
-      console.log(`🔢 Tokens used: ${testResponse.usage?.total_tokens || 'N/A'}`);
+      console.log(`🔢 Tokens used: ${completion.usage?.total_tokens || 'N/A'}`);
+      console.log(`🤖 Model used: ${completion.model}`);
       return {
         success: true,
         response: responseText,
-        usage: testResponse.usage,
-        model: testResponse.model
+        usage: completion.usage,
+        model: completion.model,
+        id: completion.id
       };
     } else {
       throw new Error('Empty response from Groq API');
     }
   } catch (error) {
     console.error('❌ Groq API connection test failed:', error.message);
+
+    // Enhanced error handling for modern SDK
+    let errorDetails = error.message;
+    if (error.status) {
+      errorDetails += ` (HTTP ${error.status})`;
+    }
+    if (error.error?.message) {
+      errorDetails += ` - ${error.error.message}`;
+    }
+
     return {
       success: false,
-      error: error.message,
-      details: error.response?.data || error.stack
+      error: errorDetails,
+      status: error.status,
+      details: error.error || error.stack
     };
   }
 };
@@ -157,8 +168,8 @@ const validateGroqConfig = () => {
       apiKey: process.env.GROQ_API_KEY ? '***' + process.env.GROQ_API_KEY.slice(-4) : 'Not set',
       primaryModel: modelConfig.primary.name,
       fallbackModel: modelConfig.fallback.name,
-      baseURL: groqConfig.baseURL,
-      timeout: groqConfig.timeout
+      timeout: groqConfig.timeout,
+      sdkVersion: 'modern'
     }
   };
 };

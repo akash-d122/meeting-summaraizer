@@ -1,0 +1,11 @@
+# Task ID: 8
+# Title: Build Summary Display and Editing Interface
+# Status: done
+# Dependencies: 7
+# Priority: high
+# Description: Create frontend components to display generated summaries and allow users to edit them in real time.
+# Details:
+Use a rich text editor (e.g., Quill, Draft.js) or textarea for editing. Display summary content with formatting options. Implement save draft and auto-save features. Store edits in Summaries table with edit history.
+
+# Test Strategy:
+Edit summaries and verify changes persist. Test formatting and draft saving. Check edit history tracking.

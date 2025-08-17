@@ -1,0 +1,11 @@
+# Task ID: 5
+# Title: Implement Custom Instruction Input System
+# Status: done
+# Dependencies: 4
+# Priority: high
+# Description: Add frontend and backend support for users to enter custom AI prompts and select summary styles.
+# Details:
+Frontend: Text input for instructions, dropdown for summary styles (executive, action items, technical, custom). Display prompt templates and examples. Backend: Accept and store instructions with transcript record. Enforce character/word limits.
+
+# Test Strategy:
+Submit various instructions and styles. Validate input constraints. Ensure instructions are stored and retrievable.

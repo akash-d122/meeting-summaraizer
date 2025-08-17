@@ -12,10 +12,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     content: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true, // Allow null during generation, will be updated when complete
+      defaultValue: '',
       validate: {
-        notEmpty: true,
-        len: [10, 50000] // Reasonable summary length limits
+        len: [0, 50000] // Reasonable summary length limits
       }
     },
     summaryStyle: {

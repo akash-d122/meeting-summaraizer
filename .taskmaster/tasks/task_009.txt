@@ -1,0 +1,11 @@
+# Task ID: 9
+# Title: Implement Summary Preview and Formatting Options
+# Status: done
+# Dependencies: 8
+# Priority: medium
+# Description: Enable users to preview the final summary with formatting before sharing.
+# Details:
+Add preview button to editing interface. Render summary as it will appear in email (HTML and plain text). Allow users to adjust formatting and view both output styles.
+
+# Test Strategy:
+Preview summaries with various formats. Confirm output matches expected email rendering.

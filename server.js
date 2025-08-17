@@ -1,9 +1,17 @@
 const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
+const cookieParser = require('cookie-parser');
 const path = require('path');
 require('dotenv').config();
+
+// Import security middleware
+const {
+  rateLimitConfigs,
+  slowDownConfig,
+  helmetConfig,
+  corsConfig,
+  requestLogger,
+  securityMonitor
+} = require('./middleware/security');
 
 // Import database models and configuration
 const { initializeDatabase, sequelize } = require('./models');
@@ -13,21 +21,34 @@ const { validateGroqConfig } = require('./config/groq');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Security middleware
-app.use(helmet());
-app.use(cors());
+// Security middleware - comprehensive implementation
+console.log('🔒 Initializing security middleware...');
 
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-  message: 'Too many requests from this IP, please try again later.'
-});
-app.use(limiter);
+// Trust proxy for accurate IP addresses
+app.set('trust proxy', 1);
+
+// Security headers
+app.use(helmetConfig);
+
+// CORS configuration
+app.use(corsConfig);
+
+// Request logging and monitoring
+app.use(requestLogger);
+
+// Security monitoring for suspicious patterns
+app.use(securityMonitor);
+
+// General rate limiting and slow down
+app.use(rateLimitConfigs.general);
+app.use(slowDownConfig);
+
+console.log('✅ Security middleware initialized');
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(cookieParser());
 
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
@@ -35,6 +56,32 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Routes
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Global error handling middleware
+const { errorHandler, userFeedbackSystem } = require('./services/errorHandler');
+
+app.use(async (error, req, res, next) => {
+  // Handle errors with comprehensive error management
+  const errorContext = {
+    component: 'ExpressServer',
+    operation: req.method + ' ' + req.path,
+    sessionId: req.session?.id,
+    userId: req.session?.userId || 'anonymous',
+    userAgent: req.headers['user-agent'],
+    ipAddress: req.ip,
+    requestBody: req.body,
+    requestQuery: req.query
+  };
+
+  const errorResult = await errorHandler.handleError(error, errorContext);
+  const userResponse = userFeedbackSystem.generateErrorResponse(error, errorContext);
+
+  // Log the error
+  console.error(`🚨 Unhandled error in ${req.method} ${req.path}:`, error.message);
+
+  // Send user-friendly error response
+  res.status(error.status || 500).json(userResponse);
 });
 
 // Health check endpoint
@@ -45,6 +92,15 @@ app.get('/health', async (req, res) => {
 
     // Check Groq configuration
     const groqValidation = validateGroqConfig();
+
+    // Check error handling system status
+    const errorStats = errorHandler.getErrorStats('1h');
+    const errorSystemHealth = {
+      status: errorStats.total < 10 ? 'healthy' : errorStats.total < 50 ? 'warning' : 'degraded',
+      errorsLastHour: errorStats.total,
+      criticalErrors: errorStats.bySeverity?.critical || 0,
+      loggedErrors: errorHandler.errorLog.length
+    };
 
     const health = {
       status: 'OK',
@@ -60,7 +116,8 @@ app.get('/health', async (req, res) => {
           primaryModel: groqValidation.config.primaryModel,
           fallbackModel: groqValidation.config.fallbackModel,
           apiKey: groqValidation.config.apiKey
-        }
+        },
+        errorHandling: errorSystemHealth
       }
     };
 
@@ -78,11 +135,23 @@ app.get('/health', async (req, res) => {
   }
 });
 
-// API routes
-app.use('/api/upload', require('./routes/upload'));
+// API routes with specific rate limiting
+console.log('🔗 Configuring API routes with security...');
+
+// File upload routes (most restrictive)
+app.use('/api/upload', rateLimitConfigs.upload, require('./routes/upload'));
+
+// Summary generation routes (AI processing - very restrictive)
+app.use('/api/summaries', rateLimitConfigs.aiProcessing, require('./routes/summaries'));
+
+// Email routes (moderately restrictive)
+app.use('/api/email', rateLimitConfigs.email, require('./routes/email'));
+
+// Instructions and error routes (general rate limiting)
 app.use('/api/instructions', require('./routes/instructions'));
-app.use('/api/summary', require('./routes/summary'));
-app.use('/api/email', require('./routes/email'));
+app.use('/api/errors', require('./routes/errors'));
+
+console.log('✅ API routes configured with security');
 
 // Error handling middleware
 app.use((err, req, res, next) => {

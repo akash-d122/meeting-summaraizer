@@ -1,0 +1,61 @@
+# Task ID: 6
+# Title: Integrate Groq AI Service for Summary Generation
+# Status: done
+# Dependencies: 5
+# Priority: high
+# Description: Connect backend to Groq API using llama-3.3-70b-versatile model for generating meeting summaries based on uploaded transcripts and user instructions.
+# Details:
+Implement API call to Groq with transcript content and prompt. Handle authentication via environment variables. Support up to 131K tokens context. Parse and store AI output in Summaries table. Implement fallback to llama-3.1-8b-instant if primary model fails.
+
+# Test Strategy:
+Send test transcripts and prompts. Validate summary quality and fallback logic. Simulate API failures and check error handling.
+
+# Subtasks:
+## 1. Set Up Groq API Credentials and Environment Variables [done]
+### Dependencies: None
+### Description: Obtain Groq API key, securely store it, and configure environment variables for authentication.
+### Details:
+Register for a Groq account, generate an API key, and set it as an environment variable (e.g., GROQ_API_KEY) in your backend environment. Ensure the key is not hardcoded and is accessible to your backend service at runtime.
+
+## 2. Install and Configure Groq API Client Library [done]
+### Dependencies: 6.1
+### Description: Add the official Groq SDK or HTTP client to your backend project and configure it for use.
+### Details:
+Install the Groq SDK (e.g., via pip for Python or pnpm/npm for Node.js). Initialize the client using the API key from environment variables. Confirm that the client is ready to make requests to Groq endpoints.
+
+## 3. Design Prompt Engineering Logic for Summary Generation [done]
+### Dependencies: 6.2
+### Description: Develop logic to construct effective prompts using transcript content and user instructions for the summary generation model.
+### Details:
+Create a function that takes transcript text and user instructions, formats them into a prompt optimized for the llama-3.3-70b-versatile model. Ensure prompt length and structure support up to 131K tokens context.
+
+## 4. Implement Primary Groq API Call for Summary Generation [done]
+### Dependencies: 6.3
+### Description: Integrate backend logic to send the constructed prompt and transcript to Groq API using the llama-3.3-70b-versatile model.
+### Details:
+Develop a backend function that sends a chat completion request to Groq API with the formatted prompt, specifying the llama-3.3-70b-versatile model. Handle large context windows and ensure request parameters match API requirements.
+
+## 5. Implement Fallback Logic to llama-3.1-8b-instant Model [done]
+### Dependencies: 6.4
+### Description: Add error handling to detect primary model failures and retry summary generation using the fallback model.
+### Details:
+Monitor API responses for errors or timeouts. If the llama-3.3-70b-versatile model fails, automatically retry the request using llama-3.1-8b-instant. Log fallback events for monitoring and debugging.
+
+## 6. Parse and Validate AI Output for Summary Quality [done]
+### Dependencies: 6.5
+### Description: Extract, validate, and clean the summary text from Groq API responses before storage.
+### Details:
+Parse the API response to extract the summary content. Validate that the output is non-empty, relevant, and meets formatting requirements. Clean up any extraneous text or artifacts.
+
+## 7. Store Generated Summaries in Database [done]
+### Dependencies: 6.6
+### Description: Save validated summaries to the Summaries table, linking them to the relevant meeting and user.
+### Details:
+Implement database logic to insert the summary, transcript reference, user instructions, and metadata into the Summaries table. Ensure atomicity and error handling for database operations.
+
+## 8. End-to-End Integration and Testing [done]
+### Dependencies: 6.7
+### Description: Test the complete summary generation workflow, including error handling, fallback, and storage.
+### Details:
+Develop integration tests that upload transcripts, provide instructions, trigger summary generation, and validate the final stored output. Simulate API failures and edge cases to ensure robustness.
+

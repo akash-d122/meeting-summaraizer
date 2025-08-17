@@ -45,6 +45,36 @@ class MeetingSummarizer {
             this.togglePanel('tips-panel');
         });
 
+        // Email functionality
+        document.getElementById('share-btn').addEventListener('click', () => {
+            this.showEmailSection();
+        });
+
+        document.getElementById('preview-email-btn').addEventListener('click', () => {
+            this.previewEmail();
+        });
+
+        document.getElementById('send-email-btn').addEventListener('click', () => {
+            this.sendSummaryEmail();
+        });
+
+        document.getElementById('send-from-preview-btn').addEventListener('click', () => {
+            this.sendSummaryEmail();
+        });
+
+        document.getElementById('edit-email-btn').addEventListener('click', () => {
+            this.showSection('email-section');
+        });
+
+        document.getElementById('back-to-summary-btn').addEventListener('click', () => {
+            this.showSection('summary-section');
+        });
+
+        // Template selection change
+        document.getElementById('email-template').addEventListener('change', () => {
+            this.updateTemplateDescription();
+        });
+
         // Template selection
         document.addEventListener('click', (e) => {
             if (e.target.closest('.template-card')) {
@@ -62,9 +92,6 @@ class MeetingSummarizer {
         document.getElementById('generate-btn').addEventListener('click', () => this.generateSummary());
         document.getElementById('edit-btn').addEventListener('click', () => this.toggleEdit());
         document.getElementById('preview-btn').addEventListener('click', () => this.previewSummary());
-        document.getElementById('share-btn').addEventListener('click', () => this.showEmailSection());
-        document.getElementById('send-email-btn').addEventListener('click', () => this.sendEmail());
-        document.getElementById('back-to-summary-btn').addEventListener('click', () => this.showSection('summary-section'));
     }
 
     showSection(sectionId) {
@@ -113,11 +140,11 @@ class MeetingSummarizer {
         if (!file) return;
 
         // Validate file type
-        const allowedTypes = ['.txt', '.md', '.doc', '.docx'];
+        const allowedTypes = ['.txt', '.md', '.doc', '.docx', '.pdf', '.rtf'];
         const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
 
         if (!allowedTypes.includes(fileExtension)) {
-            this.showStatus('Please select a valid file type (.txt, .md, .doc, .docx)', 'error');
+            this.showStatus('Please select a valid file type (.txt, .md, .doc, .docx, .pdf, .rtf)', 'error');
             return;
         }
 
@@ -533,11 +560,12 @@ class MeetingSummarizer {
             const requestData = {
                 transcriptId: this.currentTranscript.id,
                 summaryStyle: document.getElementById('summary-style').value,
-                customInstructions: document.getElementById('custom-instructions').value
+                customInstructions: document.getElementById('custom-instructions').value,
+                urgency: 'normal'
             };
 
-            // Make API call (will be implemented in Task 6)
-            const response = await fetch('/api/summary/generate', {
+            // Make API call to generate summary
+            const response = await fetch('/api/summaries/generate', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -546,25 +574,36 @@ class MeetingSummarizer {
                 body: JSON.stringify(requestData)
             });
 
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.error || `HTTP error! status: ${response.status}`);
-            }
-
             const result = await response.json();
 
-            if (result.status === 'placeholder') {
-                // Handle placeholder response for now
-                this.showStatus('Summary generation will be available after Groq AI integration (Task 6)', 'info');
+            if (!response.ok) {
+                // Handle error response
+                if (result.error && result.error.userMessage) {
+                    // User-friendly error from error handling system
+                    this.showStatus(result.error.userMessage.title, 'error');
+                    console.error('API Error:', result.error);
+                } else {
+                    // Fallback error message
+                    throw new Error(result.message || result.error || 'Failed to generate summary');
+                }
                 return;
             }
 
-            this.generatedSummary = result.summary;
+            if (result.success && result.summary) {
+                this.generatedSummary = result.summary;
 
-            // Display summary
-            document.getElementById('summary-content').textContent = this.generatedSummary;
-            this.showSection('summary-section');
-            this.showStatus('Summary generated successfully!', 'success');
+                // Display summary with enhanced formatting
+                const summaryContent = document.getElementById('summary-content');
+                summaryContent.innerHTML = this.formatSummaryForDisplay(result.summary.content);
+
+                // Show additional information if available
+                this.displaySummaryMetadata(result.summary);
+
+                this.showSection('summary-section');
+                this.showStatus('Summary generated successfully!', 'success');
+            } else {
+                throw new Error('Invalid response format');
+            }
 
         } catch (error) {
             console.error('Error generating summary:', error);
@@ -573,6 +612,121 @@ class MeetingSummarizer {
             generateBtn.disabled = false;
             generateBtn.textContent = 'Generate Summary';
         }
+    }
+
+    /**
+     * Format summary content for display with proper HTML formatting
+     */
+    formatSummaryForDisplay(content) {
+        if (!content) return '';
+
+        // Convert markdown-style formatting to HTML
+        let formatted = content
+            // Convert headers
+            .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+            .replace(/^## (.*$)/gm, '<h2>$1</h2>')
+            .replace(/^# (.*$)/gm, '<h1>$1</h1>')
+            // Convert bullet points
+            .replace(/^[•\-\*] (.*$)/gm, '<li>$1</li>')
+            // Convert numbered lists
+            .replace(/^\d+\. (.*$)/gm, '<li>$1</li>')
+            // Convert line breaks
+            .replace(/\n\n/g, '</p><p>')
+            .replace(/\n/g, '<br>');
+
+        // Wrap in paragraphs and handle lists
+        formatted = '<p>' + formatted + '</p>';
+        formatted = formatted.replace(/(<li>.*?<\/li>)/gs, '<ul>$1</ul>');
+
+        return formatted;
+    }
+
+    /**
+     * Display summary metadata (quality, cost, etc.)
+     */
+    displaySummaryMetadata(summary) {
+        // Create or update metadata display
+        let metadataDiv = document.getElementById('summary-metadata');
+        if (!metadataDiv) {
+            metadataDiv = document.createElement('div');
+            metadataDiv.id = 'summary-metadata';
+            metadataDiv.className = 'summary-metadata';
+
+            const summaryContainer = document.querySelector('.summary-container');
+            summaryContainer.insertBefore(metadataDiv, summaryContainer.firstChild);
+        }
+
+        let metadataHTML = '<div class="metadata-grid">';
+
+        // Quality information
+        if (summary.quality) {
+            const qualityColor = this.getQualityColor(summary.quality.grade);
+            metadataHTML += `
+                <div class="metadata-item">
+                    <span class="metadata-label">Quality:</span>
+                    <span class="metadata-value quality-${summary.quality.grade.toLowerCase()}" style="color: ${qualityColor}">
+                        ${summary.quality.grade} (${Math.round(summary.quality.score * 100)}%)
+                    </span>
+                </div>
+            `;
+        }
+
+        // Processing information
+        if (summary.processingTime) {
+            metadataHTML += `
+                <div class="metadata-item">
+                    <span class="metadata-label">Processing Time:</span>
+                    <span class="metadata-value">${(summary.processingTime / 1000).toFixed(1)}s</span>
+                </div>
+            `;
+        }
+
+        // Cost information
+        if (summary.cost) {
+            metadataHTML += `
+                <div class="metadata-item">
+                    <span class="metadata-label">Cost:</span>
+                    <span class="metadata-value">$${summary.cost.toFixed(6)}</span>
+                </div>
+            `;
+        }
+
+        // Token usage
+        if (summary.tokenUsage) {
+            metadataHTML += `
+                <div class="metadata-item">
+                    <span class="metadata-label">Tokens:</span>
+                    <span class="metadata-value">${summary.tokenUsage.totalTokens}</span>
+                </div>
+            `;
+        }
+
+        // Model used
+        if (summary.model) {
+            metadataHTML += `
+                <div class="metadata-item">
+                    <span class="metadata-label">Model:</span>
+                    <span class="metadata-value">${summary.model}</span>
+                </div>
+            `;
+        }
+
+        metadataHTML += '</div>';
+        metadataDiv.innerHTML = metadataHTML;
+    }
+
+    /**
+     * Get color for quality grade
+     */
+    getQualityColor(grade) {
+        const colors = {
+            'A': '#28a745',
+            'B': '#6f42c1',
+            'C': '#fd7e14',
+            'D': '#dc3545',
+            'F': '#6c757d'
+        };
+        return colors[grade] || '#6c757d';
     }
 
     toggleEdit() {
@@ -608,19 +762,141 @@ class MeetingSummarizer {
     }
 
     showEmailSection() {
-        // Pre-fill email subject
-        const today = new Date().toLocaleDateString();
-        document.getElementById('email-subject').value = `Meeting Summary - ${today}`;
+        // Pre-fill email subject with intelligent subject line
+        if (this.generatedSummary && this.generatedSummary.content) {
+            // Try to extract meeting topic from content
+            const topic = this.extractMeetingTopic(this.generatedSummary.content);
+            const date = new Date().toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+            const style = this.generatedSummary.summaryStyle || 'Executive';
+            document.getElementById('email-subject').value = `${topic} - ${style} Summary (${date})`;
+        } else {
+            const today = new Date().toLocaleDateString();
+            document.getElementById('email-subject').value = `Meeting Summary - ${today}`;
+        }
+
+        // Update template description
+        this.updateTemplateDescription();
+
         this.showSection('email-section');
     }
 
-    async sendEmail() {
+    extractMeetingTopic(content) {
+        if (!content) return 'Meeting';
+
+        // Try to find meeting topic in first few lines
+        const lines = content.split('\n').slice(0, 5);
+
+        // Look for common meeting patterns
+        const topicPatterns = [
+            /(?:meeting|discussion|call|session)\s+(?:about|on|regarding|for)\s+(.+?)(?:\.|$)/i,
+            /^(.+?)\s+(?:meeting|discussion|call|session)/i,
+            /topic:\s*(.+?)(?:\.|$)/i,
+            /subject:\s*(.+?)(?:\.|$)/i,
+            /agenda:\s*(.+?)(?:\.|$)/i
+        ];
+
+        for (const line of lines) {
+            for (const pattern of topicPatterns) {
+                const match = line.match(pattern);
+                if (match && match[1]) {
+                    return match[1].trim().substring(0, 50); // Limit length
+                }
+            }
+        }
+
+        // Fallback to filename if available
+        if (this.uploadedFile && this.uploadedFile.name) {
+            return this.uploadedFile.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
+        }
+
+        return 'Meeting';
+    }
+
+    updateTemplateDescription() {
+        const template = document.getElementById('email-template').value;
+        const descriptions = {
+            'default': 'Comprehensive template with full metadata, quality insights, and detailed formatting.',
+            'professional': 'Executive-style template optimized for business communications with clean layout.',
+            'minimal': 'Clean and simple template focusing on content with minimal metadata.'
+        };
+
+        // You could add a description element if needed
+        console.log(`Template selected: ${template} - ${descriptions[template]}`);
+    }
+
+    async previewEmail() {
         const recipients = document.getElementById('email-recipients').value;
         const subject = document.getElementById('email-subject').value;
-        const summaryContent = document.getElementById('summary-content').textContent;
+        const template = document.getElementById('email-template').value;
+        const customMessage = document.getElementById('email-custom-message').value;
 
-        if (!recipients || !subject) {
-            this.showStatus('Please fill in all email fields', 'error');
+        if (!recipients.trim()) {
+            this.showStatus('Please enter at least one email recipient to preview', 'error');
+            return;
+        }
+
+        if (!this.generatedSummary) {
+            this.showStatus('No summary available to preview', 'error');
+            return;
+        }
+
+        try {
+            this.showStatus('Generating email preview...', 'info');
+
+            const response = await fetch('/api/email/preview-summary', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    summaryId: this.generatedSummary.id,
+                    recipients: recipients.split(',').map(email => email.trim()),
+                    customSubject: subject,
+                    customMessage: customMessage,
+                    templateStyle: template
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                // Update preview display
+                document.getElementById('preview-subject').textContent = result.preview.subject;
+                document.getElementById('preview-template').textContent =
+                    template.charAt(0).toUpperCase() + template.slice(1);
+
+                // Load HTML content into iframe
+                const iframe = document.getElementById('email-preview-frame');
+                iframe.srcdoc = result.preview.html;
+
+                this.showSection('email-preview-section');
+                this.showStatus('Email preview generated successfully!', 'success');
+            } else {
+                this.showStatus(`Failed to generate preview: ${result.error}`, 'error');
+            }
+        } catch (error) {
+            console.error('Email preview error:', error);
+            this.showStatus('Failed to generate email preview. Please try again.', 'error');
+        }
+    }
+
+    async sendSummaryEmail() {
+        const recipients = document.getElementById('email-recipients').value;
+        const subject = document.getElementById('email-subject').value;
+        const template = document.getElementById('email-template').value;
+        const customMessage = document.getElementById('email-custom-message').value;
+
+        if (!recipients) {
+            this.showStatus('Please enter at least one recipient email address', 'error');
+            return;
+        }
+
+        if (!this.generatedSummary || !this.generatedSummary.id) {
+            this.showStatus('No summary available to send', 'error');
             return;
         }
 
@@ -629,28 +905,51 @@ class MeetingSummarizer {
         sendBtn.textContent = 'Sending...';
 
         try {
-            const response = await fetch('/api/email/send', {
+            // Parse recipients
+            const recipientList = recipients.split(',').map(email => email.trim()).filter(email => email);
+
+            // Validate email addresses
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const invalidEmails = recipientList.filter(email => !emailRegex.test(email));
+
+            if (invalidEmails.length > 0) {
+                throw new Error(`Invalid email addresses: ${invalidEmails.join(', ')}`);
+            }
+
+            const response = await fetch('/api/email/send-summary', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    recipients: recipients.split(',').map(email => email.trim()),
-                    subject: subject,
-                    content: summaryContent
+                    summaryId: this.generatedSummary.id,
+                    recipients: recipientList,
+                    customSubject: subject || undefined,
+                    customMessage: customMessage || `Summary generated on ${new Date().toLocaleDateString()}`,
+                    templateStyle: template
                 })
             });
 
+            const result = await response.json();
+
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(result.error || `HTTP error! status: ${response.status}`);
             }
 
-            this.showStatus('Email sent successfully!', 'success');
-            this.showSection('summary-section');
+            if (result.success) {
+                this.showStatus(`Email sent successfully to ${result.data.recipients} recipient(s)!`, 'success');
+                this.showSection('summary-section');
+
+                // Clear form
+                document.getElementById('email-recipients').value = '';
+                document.getElementById('email-subject').value = '';
+            } else {
+                throw new Error(result.error || 'Failed to send email');
+            }
 
         } catch (error) {
             console.error('Error sending email:', error);
-            this.showStatus('Error sending email. Please try again.', 'error');
+            this.showStatus(`Error sending email: ${error.message}`, 'error');
         } finally {
             sendBtn.disabled = false;
             sendBtn.textContent = 'Send Email';

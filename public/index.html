@@ -9,7 +9,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>🤖 AI Meeting Summarizer</h1>
+            <h1>AI Meeting Summarizer</h1>
             <p>Transform your meeting transcripts into structured summaries</p>
         </header>
 
@@ -22,7 +22,8 @@
                         <div class="upload-icon">📄</div>
                         <p>Drag and drop your meeting transcript here</p>
                         <p class="upload-subtitle">or click to browse files</p>
-                        <input type="file" id="file-input" accept=".txt,.md,.doc,.docx" hidden>
+                        <p class="upload-subtitle" style="font-size: 0.8em; color: #6c757d;">Supported: .txt, .md, .doc, .docx, .pdf, .rtf (max 10MB)</p>
+                        <input type="file" id="file-input" accept=".txt,.md,.doc,.docx,.pdf,.rtf,application/pdf,text/plain,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden>
                         <button type="button" id="browse-btn" class="btn btn-primary">Browse Files</button>
                     </div>
                 </div>
@@ -129,17 +130,57 @@
             <section id="email-section" class="section hidden">
                 <h2>📧 Share Summary</h2>
                 <div class="email-form">
-                    <label for="email-recipients">Recipients (comma-separated):</label>
-                    <input type="email" id="email-recipients" class="form-control" 
-                           placeholder="email1@example.com, email2@example.com" multiple>
-                    
-                    <label for="email-subject">Subject:</label>
-                    <input type="text" id="email-subject" class="form-control" 
-                           placeholder="Meeting Summary - [Date]">
-                    
+                    <div class="form-group">
+                        <label for="email-recipients">Recipients (comma-separated):</label>
+                        <input type="email" id="email-recipients" class="form-control"
+                               placeholder="email1@example.com, email2@example.com" multiple>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email-subject">Subject:</label>
+                        <input type="text" id="email-subject" class="form-control"
+                               placeholder="Meeting Summary - [Date]">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email-template">Email Template:</label>
+                        <select id="email-template" class="form-control">
+                            <option value="default">Default - Comprehensive</option>
+                            <option value="professional">Professional - Executive Style</option>
+                            <option value="minimal">Minimal - Clean & Simple</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email-custom-message">Custom Message (optional):</label>
+                        <textarea id="email-custom-message" class="form-control" rows="3"
+                                  placeholder="Add a personal message to include with the summary..."></textarea>
+                    </div>
+
                     <div class="email-actions">
+                        <button type="button" id="preview-email-btn" class="btn btn-info">Preview Email</button>
                         <button type="button" id="send-email-btn" class="btn btn-success">Send Email</button>
                         <button type="button" id="back-to-summary-btn" class="btn btn-secondary">Back to Summary</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Email Preview Section -->
+            <section id="email-preview-section" class="section hidden">
+                <h2>📧 Email Preview</h2>
+                <div class="email-preview-container">
+                    <div class="preview-header">
+                        <div class="preview-meta">
+                            <div><strong>Subject:</strong> <span id="preview-subject"></span></div>
+                            <div><strong>Template:</strong> <span id="preview-template"></span></div>
+                        </div>
+                    </div>
+                    <div class="preview-content">
+                        <iframe id="email-preview-frame" style="width: 100%; height: 600px; border: 1px solid #ddd; border-radius: 4px;"></iframe>
+                    </div>
+                    <div class="preview-actions">
+                        <button type="button" id="edit-email-btn" class="btn btn-secondary">Edit Email</button>
+                        <button type="button" id="send-from-preview-btn" class="btn btn-success">Send Email</button>
                     </div>
                 </div>
             </section>

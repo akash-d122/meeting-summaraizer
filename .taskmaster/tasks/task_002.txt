@@ -1,0 +1,11 @@
+# Task ID: 2
+# Title: Design and Implement Database Schema
+# Status: done
+# Dependencies: 1
+# Priority: high
+# Description: Create database models for meeting transcripts, summaries, email records, and user sessions using PostgreSQL or MongoDB.
+# Details:
+Define tables/collections: MeetingTranscripts (id, filename, metadata, content, status), Summaries (id, transcript_id, content, instructions, edit_history), EmailRecords (id, summary_id, recipients, status, timestamps), UserSessions (id, session_data, timestamps). Use ORM (Sequelize for PostgreSQL or Mongoose for MongoDB). Apply migrations.
+
+# Test Strategy:
+Run migration scripts and verify schema creation. Insert and retrieve test records for each model.

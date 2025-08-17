@@ -1,0 +1,11 @@
+# Task ID: 3
+# Title: Implement Secure File Upload API
+# Status: done
+# Dependencies: 2
+# Priority: high
+# Description: Develop backend API endpoint for uploading meeting transcript files with validation for supported formats and size limits.
+# Details:
+Use multer (Node.js) or FastAPI UploadFile for file handling. Accept .txt, .md, .doc files. Enforce 10MB size limit. Store files securely and update MeetingTranscripts table with metadata and status. Return upload progress and error messages.
+
+# Test Strategy:
+Upload files of various types and sizes. Attempt invalid uploads and verify error handling. Check database for correct metadata storage.

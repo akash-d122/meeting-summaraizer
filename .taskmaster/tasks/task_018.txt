@@ -1,0 +1,11 @@
+# Task ID: 18
+# Title: Advanced Summary Management System
+# Status: pending
+# Dependencies: 17
+# Priority: medium
+# Description: Enhance summary management with versioning, multiple styles per transcript, search and filtering capabilities, and bulk operations for enterprise-level functionality.
+# Details:
+- Summary versioning and edit history tracking\n- Multiple summary styles per transcript (executive, technical, action-items)\n- Full-text search and advanced filtering\n- Summary comparison and diff views\n- Bulk operations on summaries\n- Export functionality (PDF, Word, etc.)\n- Summary analytics and insights
+
+# Test Strategy:
+Version comparison testing, multi-style generation testing, search functionality testing

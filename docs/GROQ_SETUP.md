@@ -46,6 +46,28 @@ You should see:
 🎉 All Groq API credential tests passed!
 ```
 
+## 🆕 Modern SDK Approach
+
+This implementation uses the **official groq-sdk** with the modern API pattern:
+
+```javascript
+const Groq = require('groq-sdk');
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+const completion = await groq.chat.completions.create({
+  model: "llama-3.3-70b-versatile",
+  messages: [{ role: "user", content: "Your prompt here" }]
+});
+```
+
+**Benefits of Modern SDK:**
+- ✅ **Simplified initialization** - no manual baseURL configuration
+- ✅ **Better error handling** - enhanced error messages and status codes
+- ✅ **Automatic retries** - built-in retry logic for transient failures
+- ✅ **Streaming support** - real-time response streaming
+- ✅ **Type safety** - better TypeScript support
+- ✅ **Official support** - maintained by Groq team
+
 ## 🔧 Configuration Options
 
 ### Environment Variables
@@ -55,7 +77,7 @@ You should see:
 | `GROQ_API_KEY` | Your Groq API key | - | ✅ Yes |
 | `GROQ_MODEL_PRIMARY` | Primary AI model | `llama-3.3-70b-versatile` | No |
 | `GROQ_MODEL_FALLBACK` | Fallback AI model | `llama-3.1-8b-instant` | No |
-| `GROQ_BASE_URL` | API base URL | `https://api.groq.com/openai/v1` | No |
+| ~~`GROQ_BASE_URL`~~ | ~~API base URL~~ | ~~Auto-handled by modern SDK~~ | ~~No~~ |
 | `GROQ_MAX_TOKENS` | Max output tokens | `32768` | No |
 | `GROQ_TEMPERATURE` | AI creativity (0-1) | `0.1` | No |
 | `GROQ_TIMEOUT` | Request timeout (ms) | `30000` | No |
@@ -97,8 +119,11 @@ You should see:
 ### Test Commands
 
 ```bash
-# Test API credentials
+# Test API credentials (modern SDK)
 npm run test:groq
+
+# Run official SDK examples
+npm run example:groq
 
 # Check application health (includes Groq status)
 curl http://localhost:3000/health
