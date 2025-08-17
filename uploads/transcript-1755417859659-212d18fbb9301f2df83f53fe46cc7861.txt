@@ -1,0 +1,22 @@
+Meeting Notes - Weekly Team Standup
+Date: August 17, 2025
+Attendees: Alice, Bob, Charlie, Diana
+
+Agenda:
+1. Project Updates
+2. Budget Review
+3. Next Steps
+
+Discussion:
+- Alice reported 80% completion on the frontend redesign
+- Bob mentioned database optimization is complete
+- Charlie raised concerns about the deployment timeline
+- Diana suggested additional testing phases
+
+Action Items:
+- Alice: Complete frontend by Friday
+- Bob: Prepare deployment scripts
+- Charlie: Update project timeline
+- Diana: Schedule testing sessions
+
+Next Meeting: August 24, 2025

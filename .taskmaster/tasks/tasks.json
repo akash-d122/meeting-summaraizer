@@ -1,0 +1,291 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Initialize Project Repository and Environment",
+        "description": "Set up the project repository, initialize version control, and configure the development environment with required dependencies and environment variables.",
+        "details": "Create a new Git repository. Set up .gitignore for node_modules, environment files, and build artifacts. Initialize Node.js/Express.js backend and React.js frontend (or basic HTML/CSS/JS if React is not chosen). Configure environment variables for API keys (Groq, email service). Document setup steps in README.",
+        "testStrategy": "Verify repository can be cloned and project dependencies installed. Ensure environment variables are loaded correctly and project starts without errors.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Design and Implement Database Schema",
+        "description": "Create database models for meeting transcripts, summaries, email records, and user sessions using PostgreSQL or MongoDB.",
+        "details": "Define tables/collections: MeetingTranscripts (id, filename, metadata, content, status), Summaries (id, transcript_id, content, instructions, edit_history), EmailRecords (id, summary_id, recipients, status, timestamps), UserSessions (id, session_data, timestamps). Use ORM (Sequelize for PostgreSQL or Mongoose for MongoDB). Apply migrations.",
+        "testStrategy": "Run migration scripts and verify schema creation. Insert and retrieve test records for each model.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "Implement Secure File Upload API",
+        "description": "Develop backend API endpoint for uploading meeting transcript files with validation for supported formats and size limits.",
+        "details": "Use multer (Node.js) or FastAPI UploadFile for file handling. Accept .txt, .md, .doc files. Enforce 10MB size limit. Store files securely and update MeetingTranscripts table with metadata and status. Return upload progress and error messages.",
+        "testStrategy": "Upload files of various types and sizes. Attempt invalid uploads and verify error handling. Check database for correct metadata storage.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Develop Frontend File Upload Interface",
+        "description": "Create a user interface for uploading meeting transcript files with progress indicators and error feedback.",
+        "details": "Build a form with file input, drag-and-drop support, and progress bar. Display validation errors for unsupported formats or oversized files. Connect to backend upload API. Show upload status and success/failure messages.",
+        "testStrategy": "Test UI with valid and invalid files. Confirm progress bar updates and error messages display as expected.",
+        "priority": "high",
+        "dependencies": [
+          3
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Implement Custom Instruction Input System",
+        "description": "Add frontend and backend support for users to enter custom AI prompts and select summary styles.",
+        "details": "Frontend: Text input for instructions, dropdown for summary styles (executive, action items, technical, custom). Display prompt templates and examples. Backend: Accept and store instructions with transcript record. Enforce character/word limits.",
+        "testStrategy": "Submit various instructions and styles. Validate input constraints. Ensure instructions are stored and retrievable.",
+        "priority": "high",
+        "dependencies": [
+          4
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Integrate Groq AI Service for Summary Generation",
+        "description": "Connect backend to Groq API using llama-3.3-70b-versatile model for generating meeting summaries based on uploaded transcripts and user instructions.",
+        "details": "Implement API call to Groq with transcript content and prompt. Handle authentication via environment variables. Support up to 131K tokens context. Parse and store AI output in Summaries table. Implement fallback to llama-3.1-8b-instant if primary model fails.",
+        "testStrategy": "Send test transcripts and prompts. Validate summary quality and fallback logic. Simulate API failures and check error handling.",
+        "priority": "high",
+        "dependencies": [
+          5
+        ],
+        "status": "in-progress",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Set Up Groq API Credentials and Environment Variables",
+            "description": "Obtain Groq API key, securely store it, and configure environment variables for authentication.",
+            "dependencies": [],
+            "details": "Register for a Groq account, generate an API key, and set it as an environment variable (e.g., GROQ_API_KEY) in your backend environment. Ensure the key is not hardcoded and is accessible to your backend service at runtime.",
+            "status": "in-progress",
+            "testStrategy": "Verify that the environment variable is loaded and accessible by the backend process. Attempt a test API call to confirm authentication."
+          },
+          {
+            "id": 2,
+            "title": "Install and Configure Groq API Client Library",
+            "description": "Add the official Groq SDK or HTTP client to your backend project and configure it for use.",
+            "dependencies": [
+              "6.1"
+            ],
+            "details": "Install the Groq SDK (e.g., via pip for Python or pnpm/npm for Node.js). Initialize the client using the API key from environment variables. Confirm that the client is ready to make requests to Groq endpoints.",
+            "status": "pending",
+            "testStrategy": "Run a sample request to Groq API and check for successful response."
+          },
+          {
+            "id": 3,
+            "title": "Design Prompt Engineering Logic for Summary Generation",
+            "description": "Develop logic to construct effective prompts using transcript content and user instructions for the summary generation model.",
+            "dependencies": [
+              "6.2"
+            ],
+            "details": "Create a function that takes transcript text and user instructions, formats them into a prompt optimized for the llama-3.3-70b-versatile model. Ensure prompt length and structure support up to 131K tokens context.",
+            "status": "pending",
+            "testStrategy": "Test prompt generation with various transcript sizes and instructions. Validate prompt formatting and token count."
+          },
+          {
+            "id": 4,
+            "title": "Implement Primary Groq API Call for Summary Generation",
+            "description": "Integrate backend logic to send the constructed prompt and transcript to Groq API using the llama-3.3-70b-versatile model.",
+            "dependencies": [
+              "6.3"
+            ],
+            "details": "Develop a backend function that sends a chat completion request to Groq API with the formatted prompt, specifying the llama-3.3-70b-versatile model. Handle large context windows and ensure request parameters match API requirements.",
+            "status": "pending",
+            "testStrategy": "Send test requests with sample transcripts and prompts. Confirm that the API returns a summary and handles large inputs."
+          },
+          {
+            "id": 5,
+            "title": "Implement Fallback Logic to llama-3.1-8b-instant Model",
+            "description": "Add error handling to detect primary model failures and retry summary generation using the fallback model.",
+            "dependencies": [
+              "6.4"
+            ],
+            "details": "Monitor API responses for errors or timeouts. If the llama-3.3-70b-versatile model fails, automatically retry the request using llama-3.1-8b-instant. Log fallback events for monitoring and debugging.",
+            "status": "pending",
+            "testStrategy": "Simulate API failures and verify that fallback logic triggers and returns a summary from the alternate model."
+          },
+          {
+            "id": 6,
+            "title": "Parse and Validate AI Output for Summary Quality",
+            "description": "Extract, validate, and clean the summary text from Groq API responses before storage.",
+            "dependencies": [
+              "6.5"
+            ],
+            "details": "Parse the API response to extract the summary content. Validate that the output is non-empty, relevant, and meets formatting requirements. Clean up any extraneous text or artifacts.",
+            "status": "pending",
+            "testStrategy": "Check parsed summaries for completeness and relevance. Test with malformed or unexpected API responses."
+          },
+          {
+            "id": 7,
+            "title": "Store Generated Summaries in Database",
+            "description": "Save validated summaries to the Summaries table, linking them to the relevant meeting and user.",
+            "dependencies": [
+              "6.6"
+            ],
+            "details": "Implement database logic to insert the summary, transcript reference, user instructions, and metadata into the Summaries table. Ensure atomicity and error handling for database operations.",
+            "status": "pending",
+            "testStrategy": "Verify that summaries are correctly stored and retrievable. Test with concurrent requests and large data."
+          },
+          {
+            "id": 8,
+            "title": "End-to-End Integration and Testing",
+            "description": "Test the complete summary generation workflow, including error handling, fallback, and storage.",
+            "dependencies": [
+              "6.7"
+            ],
+            "details": "Develop integration tests that upload transcripts, provide instructions, trigger summary generation, and validate the final stored output. Simulate API failures and edge cases to ensure robustness.",
+            "status": "pending",
+            "testStrategy": "Run automated and manual tests covering all workflow steps. Validate summary quality, fallback behavior, and database persistence."
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Implement AI Processing Workflow and Error Handling",
+        "description": "Develop backend logic for managing AI processing status, retries, and error reporting.",
+        "details": "Track processing status in MeetingTranscripts. Implement retry logic for failed AI calls (up to 3 attempts). Log errors and update status. Notify frontend of processing progress and errors.",
+        "testStrategy": "Simulate AI service failures and verify retries. Check status updates and error logs. Confirm frontend receives accurate status.",
+        "priority": "high",
+        "dependencies": [
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Build Summary Display and Editing Interface",
+        "description": "Create frontend components to display generated summaries and allow users to edit them in real time.",
+        "details": "Use a rich text editor (e.g., Quill, Draft.js) or textarea for editing. Display summary content with formatting options. Implement save draft and auto-save features. Store edits in Summaries table with edit history.",
+        "testStrategy": "Edit summaries and verify changes persist. Test formatting and draft saving. Check edit history tracking.",
+        "priority": "high",
+        "dependencies": [
+          7
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Implement Summary Preview and Formatting Options",
+        "description": "Enable users to preview the final summary with formatting before sharing.",
+        "details": "Add preview button to editing interface. Render summary as it will appear in email (HTML and plain text). Allow users to adjust formatting and view both output styles.",
+        "testStrategy": "Preview summaries with various formats. Confirm output matches expected email rendering.",
+        "priority": "medium",
+        "dependencies": [
+          8
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Develop Email Composition and Distribution Interface",
+        "description": "Create frontend and backend components for composing emails, selecting recipients, and sending summaries.",
+        "details": "Frontend: Email input (single/multiple), subject customization, template selection. Backend: Validate email addresses, store EmailRecords, prepare summary for sending. Support HTML and plain text options.",
+        "testStrategy": "Send test emails to valid and invalid addresses. Check UI for input validation and template selection.",
+        "priority": "high",
+        "dependencies": [
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Integrate Email Service Provider (SendGrid/AWS SES/Mailgun)",
+        "description": "Set up backend integration with chosen email service for programmatic summary distribution.",
+        "details": "Configure API keys via environment variables. Implement email sending logic with delivery status tracking. Handle failed deliveries and retries. Support customizable templates.",
+        "testStrategy": "Send emails via provider sandbox/test mode. Simulate failures and verify retry and error handling.",
+        "priority": "high",
+        "dependencies": [
+          10
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "Implement Session Management and Workflow Continuity",
+        "description": "Add backend and frontend logic for basic user session management to maintain workflow state.",
+        "details": "Use cookies or JWT for session tracking. Store session data in UserSessions table. Restore in-progress uploads, edits, and email drafts on reload.",
+        "testStrategy": "Test session persistence across page reloads and browser restarts. Verify workflow continuity.",
+        "priority": "medium",
+        "dependencies": [
+          11
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "Apply Security Best Practices and Input Validation",
+        "description": "Implement security measures for API endpoints, file uploads, and user inputs.",
+        "details": "Validate all inputs (file types, email addresses, text fields). Sanitize user data to prevent injection attacks. Secure API keys using environment variables. Enforce rate limiting on sensitive endpoints.",
+        "testStrategy": "Run security tests for injection, invalid files, and rate limiting. Attempt to access protected resources without authorization.",
+        "priority": "high",
+        "dependencies": [
+          12
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 14,
+        "title": "Implement Logging, Monitoring, and Performance Tracking",
+        "description": "Add logging for key events, error monitoring, and basic performance metrics.",
+        "details": "Use a logging library (e.g., Winston, Morgan) for backend. Track API response times, AI processing duration, and email delivery status. Set up alerts for critical errors.",
+        "testStrategy": "Trigger errors and verify logs. Measure and report performance metrics. Confirm alerts are sent for failures.",
+        "priority": "medium",
+        "dependencies": [
+          13
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 15,
+        "title": "Comprehensive Testing, Documentation, and Deployment",
+        "description": "Conduct end-to-end testing, finalize documentation, and deploy the application to production.",
+        "details": "Write unit, integration, and end-to-end tests for all features. Document setup, API usage, and deployment steps. Optimize performance and prepare production environment (Heroku, Vercel, AWS).",
+        "testStrategy": "Run all test suites and verify 95%+ uptime in staging. Review documentation for completeness. Deploy and validate production readiness.",
+        "priority": "high",
+        "dependencies": [
+          14
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-08-17T07:23:55.894Z",
+      "updated": "2025-08-17T08:35:56.206Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

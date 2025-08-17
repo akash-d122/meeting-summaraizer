@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Summarizer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 AI Meeting Summarizer</h1>
+            <p>Transform your meeting transcripts into structured summaries</p>
+        </header>
+
+        <main>
+            <!-- File Upload Section -->
+            <section id="upload-section" class="section active">
+                <h2>📁 Upload Meeting Transcript</h2>
+                <div class="upload-area" id="upload-area">
+                    <div class="upload-content">
+                        <div class="upload-icon">📄</div>
+                        <p>Drag and drop your meeting transcript here</p>
+                        <p class="upload-subtitle">or click to browse files</p>
+                        <input type="file" id="file-input" accept=".txt,.md,.doc,.docx" hidden>
+                        <button type="button" id="browse-btn" class="btn btn-primary">Browse Files</button>
+                    </div>
+                </div>
+                <div id="file-info" class="file-info hidden"></div>
+                <div id="upload-progress" class="progress-bar hidden">
+                    <div class="progress-fill"></div>
+                </div>
+            </section>
+
+            <!-- Custom Instructions Section -->
+            <section id="instructions-section" class="section hidden">
+                <h2>✏️ Summary Instructions</h2>
+                <div class="instructions-form">
+                    <div class="form-group">
+                        <label for="summary-style">Summary Style:</label>
+                        <select id="summary-style" class="form-control">
+                            <option value="executive">Executive Summary (Bullet Points)</option>
+                            <option value="action-items">Action Items & Decisions</option>
+                            <option value="technical">Technical Summary</option>
+                            <option value="detailed">Detailed Overview</option>
+                            <option value="custom">Custom Instructions</option>
+                        </select>
+                        <div id="style-description" class="style-description"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="custom-instructions">
+                            Custom Instructions:
+                            <span class="char-counter">
+                                <span id="char-count">0</span>/1000 characters
+                            </span>
+                        </label>
+                        <textarea id="custom-instructions" class="form-control" rows="4"
+                                  maxlength="1000"
+                                  placeholder="Enter specific instructions for how you want the summary formatted..."></textarea>
+                        <div class="instruction-help">
+                            <button type="button" id="show-templates-btn" class="btn btn-link">
+                                📝 Show Example Templates
+                            </button>
+                            <button type="button" id="show-tips-btn" class="btn btn-link">
+                                💡 Writing Tips
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="templates-panel" class="templates-panel hidden">
+                        <h4>📝 Example Templates</h4>
+                        <div class="template-grid">
+                            <div class="template-card" data-template="meeting-notes">
+                                <h5>Meeting Notes</h5>
+                                <p>Structured meeting summary with attendees, agenda, and outcomes</p>
+                            </div>
+                            <div class="template-card" data-template="action-focused">
+                                <h5>Action-Focused</h5>
+                                <p>Emphasize action items, deadlines, and responsibilities</p>
+                            </div>
+                            <div class="template-card" data-template="decision-log">
+                                <h5>Decision Log</h5>
+                                <p>Focus on decisions made and their rationale</p>
+                            </div>
+                            <div class="template-card" data-template="stakeholder-update">
+                                <h5>Stakeholder Update</h5>
+                                <p>High-level summary for executives and stakeholders</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tips-panel" class="tips-panel hidden">
+                        <h4>💡 Writing Effective Instructions</h4>
+                        <ul class="tips-list">
+                            <li><strong>Be specific:</strong> "List action items with owners and deadlines" vs "summarize actions"</li>
+                            <li><strong>Specify format:</strong> "Use bullet points" or "Write in paragraph form"</li>
+                            <li><strong>Set priorities:</strong> "Focus on technical decisions" or "Emphasize budget discussions"</li>
+                            <li><strong>Define audience:</strong> "For executive review" or "For team implementation"</li>
+                            <li><strong>Include structure:</strong> "Start with key outcomes, then list next steps"</li>
+                        </ul>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" id="save-instructions-btn" class="btn btn-secondary">
+                            💾 Save Instructions
+                        </button>
+                        <button type="button" id="generate-btn" class="btn btn-success">
+                            🚀 Generate Summary
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Summary Display Section -->
+            <section id="summary-section" class="section hidden">
+                <h2>📝 Generated Summary</h2>
+                <div class="summary-container">
+                    <div id="summary-content" class="summary-content" contenteditable="true"></div>
+                    <div class="summary-actions">
+                        <button type="button" id="edit-btn" class="btn btn-secondary">Edit Summary</button>
+                        <button type="button" id="preview-btn" class="btn btn-info">Preview</button>
+                        <button type="button" id="share-btn" class="btn btn-primary">Share via Email</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Email Section -->
+            <section id="email-section" class="section hidden">
+                <h2>📧 Share Summary</h2>
+                <div class="email-form">
+                    <label for="email-recipients">Recipients (comma-separated):</label>
+                    <input type="email" id="email-recipients" class="form-control" 
+                           placeholder="email1@example.com, email2@example.com" multiple>
+                    
+                    <label for="email-subject">Subject:</label>
+                    <input type="text" id="email-subject" class="form-control" 
+                           placeholder="Meeting Summary - [Date]">
+                    
+                    <div class="email-actions">
+                        <button type="button" id="send-email-btn" class="btn btn-success">Send Email</button>
+                        <button type="button" id="back-to-summary-btn" class="btn btn-secondary">Back to Summary</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Status Messages -->
+        <div id="status-message" class="status-message hidden"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
