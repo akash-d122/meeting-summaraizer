@@ -1,0 +1,50 @@
+Project: Atlas v2 Planning Meeting
+Date: 2025-08-18
+Attendees: Alex Chen (PM), Priya Patel (Eng Lead), Samir Rao (Ops), Maria Gomez (Design)
+Duration: 60 minutes
+
+Agenda
+1. Timeline and scope
+2. API design decisions
+3. Risks and mitigation
+4. Next steps and responsibilities
+
+Discussion Notes
+- Current v1 maintenance will continue in parallel for 6 weeks.
+- We agreed to split Atlas v2 into two milestones: M1 (core APIs) and M2 (dashboards).
+- Performance target: P95 < 250ms for the Search endpoint under 500 RPS sustained.
+- Security: All endpoints must require OAuth2 bearer tokens. No API keys in query params.
+
+Decisions
+- Move from REST-only to a hybrid REST + async events model (Kafka). (Owner: Priya)
+- Adopt JSON:API conventions for list pagination and errors. (Owner: Alex)
+- Use Postgres 16 with read replicas; avoid cross-region writes for M1. (Owner: Samir)
+
+Design Highlights
+- Search API: GET /v2/search?query=...&page=...&size=...
+- Event: order.updated published to topic atlas.orders.v2
+- Error format example: { "errors": [{ "code": "INVALID_INPUT", "detail": "size must be <= 100" }] }
+
+Risks
+- Scope creep on dashboard filters could delay M2 by 2 weeks.
+- Unknown data quality in legacy import; need sampling plan.
+
+Mitigations
+- Freeze dashboard filter scope for M1; evaluate extended filters in M2 planning.
+- Run a 5% backfill dry-run by Friday and produce a data quality report.
+
+Action Items
+- Alex Chen: Draft PRD addendum for JSON:API pagination and error handling by Wednesday.
+- Priya Patel: Prepare API spec (OpenAPI) for Search and Orders endpoints by Friday.
+- Samir Rao: Provision staging Postgres with a read replica and share connection info by Thursday.
+- Maria Gomez: Deliver wireframes for the orders dashboard empty states by Thursday EOD.
+
+Next Steps
+- Schedule architecture review on Tuesday next week.
+- Kick off M1 implementation once API spec is reviewed.
+
+Notes
+- Consider feature flags for exposing v2 endpoints alongside v1.
+- Add synthetic checks for P95 latency on /v2/search.
+
+

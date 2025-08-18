@@ -255,6 +255,13 @@ class EmailService {
     const appUrl = process.env.APP_URL || 'http://localhost:3000';
     
     // Prepare template data
+    const numericProcessingTimeSec = Number(summaryData.processingTime || 0) / 1000;
+    const numericCost = (() => {
+      if (typeof summaryData.cost === 'number') return summaryData.cost;
+      const parsed = parseFloat(summaryData.cost || '0');
+      return Number.isNaN(parsed) ? 0 : parsed;
+    })();
+
     const templateData = {
       // Header information
       headerTitle: options.headerTitle || 'Meeting Summary',
@@ -264,8 +271,8 @@ class EmailService {
       summaryStyle: this.formatSummaryStyle(summaryData.summaryStyle),
       qualityGrade: summaryData.quality?.grade?.toLowerCase() || 'unknown',
       qualityScore: summaryData.quality?.score || 0,
-      processingTime: (summaryData.processingTime / 1000).toFixed(1),
-      cost: summaryData.cost?.toFixed(6) || '0.000000',
+      processingTime: numericProcessingTimeSec.toFixed(1),
+      cost: numericCost.toFixed(6),
       tokens: summaryData.tokenUsage?.totalTokens || 0,
       model: summaryData.aiModel || 'unknown',
       
