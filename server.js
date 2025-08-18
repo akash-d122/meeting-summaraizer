@@ -103,8 +103,10 @@ app.get('/health', async (req, res) => {
       loggedErrors: errorHandler.errorLog.length
     };
 
+    const overallStatus = dbConnected ? (groqValidation.isValid ? 'OK' : 'WARNING') : 'ERROR';
+
     const health = {
-      status: 'OK',
+      status: overallStatus,
       timestamp: new Date().toISOString(),
       environment: process.env.NODE_ENV || 'development',
       services: {
@@ -122,9 +124,9 @@ app.get('/health', async (req, res) => {
       }
     };
 
-    // Set appropriate status code
-    const allServicesOk = dbConnected && groqValidation.isValid;
-    res.status(allServicesOk ? 200 : 503).json(health);
+    // Return 200 if database is connected, even if Groq is not configured (WARNING)
+    // Return 503 only when critical services like the database are unavailable
+    res.status(dbConnected ? 200 : 503).json(health);
 
   } catch (error) {
     console.error('Health check error:', error);

@@ -62,7 +62,11 @@ const dbConfig = config[env];
 let sequelize;
 
 // For production or when DATABASE_URL is provided, use PostgreSQL
-if (process.env.DATABASE_URL || env === 'production') {
+if (env === 'production') {
+  if (!process.env.DATABASE_URL || process.env.DATABASE_URL.trim() === '') {
+    throw new TypeError('DATABASE_URL is required in production but is missing or empty. Configure a PostgreSQL database and set the DATABASE_URL environment variable.');
+  }
+
   const productionConfig = config.production;
   sequelize = new Sequelize(process.env.DATABASE_URL, {
     ...productionConfig,
@@ -72,6 +76,12 @@ if (process.env.DATABASE_URL || env === 'production') {
         rejectUnauthorized: false
       } : false
     }
+  });
+} else if (process.env.DATABASE_URL) {
+  // If DATABASE_URL is provided in non-production, honor it
+  sequelize = new Sequelize(process.env.DATABASE_URL, {
+    ...config.production,
+    logging: dbConfig.logging
   });
 } else if (dbConfig.use_env_variable) {
   sequelize = new Sequelize(process.env[dbConfig.use_env_variable], dbConfig);

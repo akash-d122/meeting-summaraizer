@@ -6,13 +6,13 @@
  */
 
 const { UserSession } = require('../models');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 
 /**
  * Generate a new session token
  */
 function generateSessionToken() {
-  return `session_${Date.now()}_${uuidv4().replace(/-/g, '')}`;
+  return `session_${Date.now()}_${randomUUID().replace(/-/g, '')}`;
 }
 
 /**
@@ -23,7 +23,7 @@ async function createSession(req, res) {
     const sessionToken = generateSessionToken();
     
     const session = await UserSession.create({
-      id: uuidv4(),
+      id: randomUUID(),
       sessionToken: sessionToken,
       ipAddress: req.ip,
       userAgent: req.headers['user-agent'],
