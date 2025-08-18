@@ -150,8 +150,30 @@
             <p style="margin: 0; font-size: 12px; color: #6c757d; line-height: 1.4;">
                 This summary was generated using AI technology to help you quickly understand key meeting insights.
                 <br>
-                <strong>Generated on {{generatedAt}}</strong>
+                <strong>Summary created from {{originalFileName}} on {{generatedAt}}</strong>
             </p>
+        </td>
+    </tr>
+</table>
+
+<!-- Professional Call to Action -->
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-top: 20px;">
+    <tr>
+        <td style="text-align: center; padding: 20px 0;">
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto;">
+                <tr>
+                    <td style="background-color: #3498db; border-radius: 4px; margin: 0 5px;">
+                        <a href="{{appUrl}}?action=upload" style="display: inline-block; color: white; padding: 12px 24px; text-decoration: none; font-weight: 600; font-size: 14px;">
+                            Upload New File
+                        </a>
+                    </td>
+                    <td style="background-color: #28a745; border-radius: 4px; margin: 0 5px;">
+                        <a href="{{appUrl}}?action=new" style="display: inline-block; color: white; padding: 12px 24px; text-decoration: none; font-weight: 600; font-size: 14px;">
+                            Process Another Document
+                        </a>
+                    </td>
+                </tr>
+            </table>
         </td>
     </tr>
 </table>

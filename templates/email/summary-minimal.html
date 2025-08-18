@@ -67,13 +67,29 @@
         <td style="text-align: center; padding: 20px 0;">
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto;">
                 <tr>
-                    <td style="background-color: #3498db; border-radius: 3px;">
-                        <a href="{{appUrl}}" style="display: inline-block; color: white; padding: 10px 20px; text-decoration: none; font-size: 13px; font-weight: 500;">
-                            Generate New Summary
+                    <td style="background-color: #3498db; border-radius: 3px; margin: 0 3px;">
+                        <a href="{{appUrl}}?action=upload" style="display: inline-block; color: white; padding: 10px 20px; text-decoration: none; font-size: 13px; font-weight: 500;">
+                            Upload New File
+                        </a>
+                    </td>
+                    <td style="background-color: #28a745; border-radius: 3px; margin: 0 3px;">
+                        <a href="{{appUrl}}?action=new" style="display: inline-block; color: white; padding: 10px 20px; text-decoration: none; font-size: 13px; font-weight: 500;">
+                            Process Another Document
                         </a>
                     </td>
                 </tr>
             </table>
+        </td>
+    </tr>
+</table>
+
+<!-- Minimal Footer -->
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-top: 15px;">
+    <tr>
+        <td style="text-align: center; padding: 10px 0;">
+            <p style="margin: 0; font-size: 11px; color: #6c757d;">
+                Summary created from {{originalFileName}} on {{generatedAt}}
+            </p>
         </td>
     </tr>
 </table>

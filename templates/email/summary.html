@@ -1,30 +1,11 @@
-<!-- Summary Metadata -->
-<div class="summary-meta">
-    <h3 style="margin: 0 0 10px 0; color: #2c3e50; font-size: 16px;">Summary Information</h3>
-    <div class="meta-grid">
-
-        <div class="meta-item">
-            <span class="meta-label">Style:</span>
-            <span class="meta-value">{{summaryStyle}}</span>
-        </div>
-        <div class="meta-item">
-            <span class="meta-label">Processing Time:</span>
-            <span class="meta-value">{{processingTime}}s</span>
-        </div>
-        <div class="meta-item">
-            <span class="meta-label">Cost:</span>
-            <span class="meta-value">${{cost}}</span>
-        </div>
-        <div class="meta-item">
-            <span class="meta-label">Tokens:</span>
-            <span class="meta-value">{{tokens}}</span>
-        </div>
-        <div class="meta-item">
-            <span class="meta-label">Model:</span>
-            <span class="meta-value">{{model}}</span>
-        </div>
-    </div>
+<!-- Summary Style Information (minimal) -->
+{{#if summaryStyle}}
+<div style="background-color: #f8f9fa; border-left: 4px solid #3498db; padding: 15px; margin-bottom: 25px; border-radius: 4px;">
+    <p style="margin: 0; font-size: 14px; color: #495057;">
+        <strong>Summary Style:</strong> {{summaryStyle}}
+    </p>
 </div>
+{{/if}}
 
 <!-- Custom Instructions (if provided) -->
 {{#if customInstructions}}
@@ -39,15 +20,15 @@
     {{{summaryContent}}}
 </div>
 
-<!-- Action Items Highlight (if any) -->
+<!-- Action Items Highlight (only if extracted separately) -->
 {{#if actionItems}}
-<div class="action-items">
-    <h4>⚡ Key Action Items</h4>
-    <ul style="margin: 0; padding-left: 20px;">
+<div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 25px 0; border-radius: 4px;">
+    <h4 style="margin: 0 0 10px 0; color: #856404; font-size: 16px;">⚡ Key Action Items</h4>
+    <ul style="margin: 0; padding-left: 20px; color: #495057;">
         {{#each actionItems}}
-        <li style="margin: 5px 0;">
-            <strong>{{owner}}:</strong> {{task}}
-            {{#if deadline}}<em>(Due: {{deadline}})</em>{{/if}}
+        <li style="margin: 8px 0; line-height: 1.4;">
+            <strong style="color: #856404;">{{owner}}:</strong> {{task}}
+            {{#if deadline}}<em style="color: #6c757d;">(Due: {{deadline}})</em>{{/if}}
         </li>
         {{/each}}
     </ul>
@@ -62,27 +43,27 @@
 </div>
 {{/if}}
 
-<!-- File Information -->
+<!-- Source Information (minimal) -->
 <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef;">
-    <h4 style="margin: 0 0 10px 0; color: #6c757d; font-size: 12px; text-transform: uppercase;">Source Information</h4>
-    <div style="font-size: 12px; color: #6c757d;">
-        <p style="margin: 2px 0;"><strong>Original File:</strong> {{originalFileName}}</p>
-        <p style="margin: 2px 0;"><strong>File Size:</strong> {{fileSize}}</p>
-        <p style="margin: 2px 0;"><strong>Content Length:</strong> {{contentLength}} characters</p>
-        <p style="margin: 2px 0;"><strong>Generated:</strong> {{generatedAt}}</p>
-        {{#if sessionId}}
-        <p style="margin: 2px 0;"><strong>Session ID:</strong> {{sessionId}}</p>
-        {{/if}}
+    <div style="font-size: 12px; color: #6c757d; text-align: center;">
+        <p style="margin: 0;">
+            Summary generated from <strong>{{originalFileName}}</strong> on {{generatedAt}}
+        </p>
     </div>
 </div>
 
 <!-- Call to Action -->
 <div style="text-align: center; margin-top: 30px; padding: 20px; background-color: #f8f9fa; border-radius: 6px;">
-    <h4 style="margin: 0 0 10px 0; color: #2c3e50;">Need to make changes?</h4>
+    <h4 style="margin: 0 0 10px 0; color: #2c3e50;">Need to process another meeting?</h4>
     <p style="margin: 0 0 15px 0; font-size: 14px; color: #6c757d;">
-        You can regenerate this summary with different settings or upload a new transcript.
+        Upload a new transcript or regenerate this summary with different settings.
     </p>
-    <a href="{{appUrl}}" style="display: inline-block; background-color: #3498db; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-weight: 600;">
-        Open Meeting Summarizer
-    </a>
+    <div style="margin-top: 15px;">
+        <a href="{{appUrl}}?action=upload" style="display: inline-block; background-color: #3498db; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: 600; margin: 0 5px;">
+            Upload New File
+        </a>
+        <a href="{{appUrl}}?action=new" style="display: inline-block; background-color: #28a745; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: 600; margin: 0 5px;">
+            Process Another Document
+        </a>
+    </div>
 </div>
