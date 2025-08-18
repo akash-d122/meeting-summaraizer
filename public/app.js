@@ -94,7 +94,7 @@ class MeetingSummarizer {
         // Button events
         document.getElementById('generate-btn').addEventListener('click', () => this.generateSummary());
         document.getElementById('edit-btn').addEventListener('click', () => this.toggleEdit());
-        document.getElementById('preview-btn').addEventListener('click', () => this.previewSummary());
+
 
         // Navigation events - use page reload for complete state reset
         // Note: Page reload is used instead of JavaScript state reset to ensure
@@ -962,19 +962,7 @@ class MeetingSummarizer {
         }
     }
 
-    previewSummary() {
-        const summaryContent = document.getElementById('summary-content').textContent;
-        const previewWindow = window.open('', '_blank', 'width=600,height=400');
-        previewWindow.document.write(`
-            <html>
-                <head><title>Summary Preview</title></head>
-                <body style="font-family: Arial, sans-serif; padding: 20px; line-height: 1.6;">
-                    <h2>Meeting Summary Preview</h2>
-                    <pre style="white-space: pre-wrap;">${summaryContent}</pre>
-                </body>
-            </html>
-        `);
-    }
+
 
     showEmailSection() {
         // Pre-fill email subject with intelligent subject line
