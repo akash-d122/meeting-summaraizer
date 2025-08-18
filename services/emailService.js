@@ -154,46 +154,25 @@ class EmailService {
   }
 
   /**
-   * Clean and format summary content for email
+   * Clean and format summary content for email with modern formatting
    */
   cleanSummaryContent(content) {
     if (!content) return '';
 
-    // Step 1: First, handle headings properly - convert markdown headers to HTML headings
+    // Step 1: Handle headings with modern styling
     let cleaned = content
-      .replace(/^#{1}\s+(.+)$/gm, '<h2>$1</h2>')
-      .replace(/^#{2}\s+(.+)$/gm, '<h3>$1</h3>')
-      .replace(/^#{3}\s+(.+)$/gm, '<h4>$1</h4>')
-      .replace(/^#{4,6}\s+(.+)$/gm, '<h5>$1</h5>')
+      .replace(/^#{1}\s+(.+)$/gm, '<h2 style="color: #2c3e50; font-size: 20px; font-weight: 600; margin: 25px 0 15px 0; line-height: 1.3; letter-spacing: 0.3px;">$1</h2>')
+      .replace(/^#{2}\s+(.+)$/gm, '<h3 style="color: #34495e; font-size: 18px; font-weight: 600; margin: 20px 0 12px 0; line-height: 1.3; letter-spacing: 0.2px;">$1</h3>')
+      .replace(/^#{3}\s+(.+)$/gm, '<h4 style="color: #5a6c7d; font-size: 16px; font-weight: 600; margin: 18px 0 10px 0; line-height: 1.3;">$1</h4>')
+      .replace(/^#{4,6}\s+(.+)$/gm, '<h5 style="color: #6c757d; font-size: 14px; font-weight: 600; margin: 15px 0 8px 0; line-height: 1.3; text-transform: uppercase; letter-spacing: 0.5px;">$1</h5>')
       // Remove bullet points from headings (common formatting issue)
-      .replace(/<h([2-5])>•\s*(.+?)<\/h\1>/g, '<h$1>$2</h$1>')
-      .replace(/<h([2-5])>[\*\-\+]\s*(.+?)<\/h\1>/g, '<h$1>$2</h$1>');
+      .replace(/<h([2-5])[^>]*>•\s*(.+?)<\/h\1>/g, '<h$1 style="color: #2c3e50; font-weight: 600; margin: 20px 0 12px 0;">$2</h$1>')
+      .replace(/<h([2-5])[^>]*>[\*\-\+]\s*(.+?)<\/h\1>/g, '<h$1 style="color: #2c3e50; font-weight: 600; margin: 20px 0 12px 0;">$2</h$1>');
 
-    // Step 2: Process content line by line to handle bullet points correctly
-    const lines = cleaned.split('\n');
-    const processedLines = lines.map(line => {
-      const trimmedLine = line.trim();
+    // Step 2: Standardize bullet points with modern styling
+    cleaned = cleaned.replace(/^(\s*)[\*\-\+]\s+/gm, '$1• ');
 
-      // Skip empty lines
-      if (!trimmedLine) return line;
-
-      // Skip lines that are already HTML headings
-      if (trimmedLine.match(/^<h[2-5]>/)) return line;
-
-      // Skip lines that look like names or titles (common patterns)
-      if (this.isNameOrTitle(trimmedLine)) return line;
-
-      // Only convert to bullet points if it's actually a list item
-      if (this.isActualListItem(trimmedLine)) {
-        return line.replace(/^\s*[\*\-\+]\s+/, '• ');
-      }
-
-      return line;
-    });
-
-    cleaned = processedLines.join('\n');
-
-    // Step 3: Continue with HTML formatting
+    // Step 3: Apply modern HTML formatting
     cleaned = cleaned
       // Remove extra whitespace
       .replace(/\n\s*\n\s*\n/g, '\n\n')
@@ -201,78 +180,30 @@ class EmailService {
       .replace(/<\/?(p|div|span)[^>]*>/gi, '')
       // Ensure proper paragraph breaks
       .replace(/\n\n/g, '</p><p>')
-      // Wrap non-heading content in paragraph tags
-      .replace(/^(?!<h[2-5]>)(.+)$/gm, '<p>$1</p>')
+      // Wrap non-heading content in paragraph tags with modern styling
+      .replace(/^(?!<h[2-5]>)(.+)$/gm, '<p style="margin: 12px 0; line-height: 1.6; color: #2c3e50;">$1</p>')
       // Clean up empty paragraphs
-      .replace(/<p>\s*<\/p>/g, '')
-      // Fix bullet point formatting in paragraphs
-      .replace(/<p>•\s*(.+?)<\/p>/g, '<li>$1</li>')
-      // Wrap consecutive list items in ul tags
-      .replace(/(<li>.*?<\/li>)(\s*<li>.*?<\/li>)*/g, '<ul>$&</ul>')
-      // Clean up any remaining issues
-      .replace(/<\/li>\s*<li>/g, '</li><li>')
-      // Remove any remaining markdown bold/italic that wasn't converted
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/<p[^>]*>\s*<\/p>/g, '')
+      // Fix bullet point formatting with modern list styling
+      .replace(/<p[^>]*>•\s*(.+?)<\/p>/g, '<li style="margin: 8px 0; line-height: 1.6; color: #2c3e50; padding-left: 5px;">$1</li>')
+      // Wrap consecutive list items in styled ul tags
+      .replace(/(<li[^>]*>.*?<\/li>)(\s*<li[^>]*>.*?<\/li>)*/g, '<ul style="margin: 15px 0; padding-left: 20px; list-style-type: none;">$&</ul>')
+      // Add modern bullet points to list items
+      .replace(/<li([^>]*)>/g, '<li$1><span style="color: #3498db; font-weight: bold; margin-right: 8px;">•</span>')
+      // Clean up list formatting
+      .replace(/<\/li>\s*<li/g, '</li><li')
+      // Convert markdown formatting to HTML with modern styling
+      .replace(/\*\*(.+?)\*\*/g, '<strong style="color: #2c3e50; font-weight: 600;">$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em style="color: #34495e; font-style: italic;">$1</em>')
       // Clean up duplicate headings or action items sections
-      .replace(/<h([2-5])>.*?action\s*items.*?<\/h\1>/gi, '')
-      .replace(/<h([2-5])>.*?key\s*action\s*items.*?<\/h\1>/gi, '')
+      .replace(/<h([2-5])[^>]*>.*?action\s*items.*?<\/h\1>/gi, '')
+      .replace(/<h([2-5])[^>]*>.*?key\s*action\s*items.*?<\/h\1>/gi, '')
       .trim();
 
     return cleaned;
   }
 
-  /**
-   * Check if a line looks like a name or title (should not be converted to bullet point)
-   */
-  isNameOrTitle(line) {
-    // Remove any existing bullet points for analysis
-    const cleanLine = line.replace(/^[\*\-\+•]\s*/, '').trim();
 
-    // Patterns that indicate names or titles
-    const namePatterns = [
-      /^[A-Z][a-z]+ [A-Z][a-z]+$/, // "John Smith"
-      /^[A-Z][a-z]+ [A-Z]\.$/, // "John D."
-      /^[A-Z][a-z]+, [A-Z][a-z]+$/, // "Smith, John"
-      /^(Mr|Ms|Mrs|Dr|Prof)\. [A-Z][a-z]+/, // "Dr. Smith"
-      /^[A-Z][a-z]+ \([A-Z]+\)$/, // "John (CEO)"
-      /^[A-Z][A-Z\s]+$/, // "JOHN SMITH" or "CEO"
-      /^(CEO|CTO|CFO|VP|Director|Manager|Lead|Senior|Junior)/, // Titles
-      /^\d{1,2}:\d{2}\s*(AM|PM)?$/, // Time stamps
-      /^\d{1,2}\/\d{1,2}\/\d{2,4}$/, // Dates
-    ];
-
-    return namePatterns.some(pattern => pattern.test(cleanLine));
-  }
-
-  /**
-   * Check if a line is actually a list item (should be converted to bullet point)
-   */
-  isActualListItem(line) {
-    // Must start with a bullet point character
-    if (!/^\s*[\*\-\+]\s+/.test(line)) return false;
-
-    const content = line.replace(/^\s*[\*\-\+]\s+/, '').trim();
-
-    // Skip if it looks like a name or title
-    if (this.isNameOrTitle(content)) return false;
-
-    // Skip if it's too short to be meaningful content
-    if (content.length < 3) return false;
-
-    // Skip if it's just a single word (likely a heading)
-    if (!/\s/.test(content) && content.length < 15) return false;
-
-    // Patterns that indicate actual list items
-    const listItemPatterns = [
-      /\b(will|should|must|need to|to|action|task|complete|finish|review|discuss|follow up|contact|send|create|update|implement|develop|test|deploy)\b/i,
-      /\b(by|due|deadline|before|after|during|next|week|month|day)\b/i,
-      /\b(responsible|owner|assigned|team|department)\b/i,
-      /.{20,}/, // Longer content is more likely to be a list item
-    ];
-
-    return listItemPatterns.some(pattern => pattern.test(content));
-  }
 
   /**
    * Extract meeting topic from content for better subject line

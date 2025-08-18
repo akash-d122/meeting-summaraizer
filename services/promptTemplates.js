@@ -43,23 +43,28 @@ Format with clear sections and bullet points for executive consumption.
 Target length: 300-500 words maximum.`,
         
         outputFormat: `
-## Executive Summary
-[2-3 sentence overview]
+# Executive Summary
+[2-3 sentence overview with clear business context]
 
-## Key Decisions
-• [Decision 1 with business impact]
-• [Decision 2 with business impact]
+## Key Decisions Made
+• [Decision 1 with business impact and rationale]
+• [Decision 2 with business impact and rationale]
+• [Decision 3 if applicable]
 
-## Strategic Outcomes
-• [Outcome 1]
-• [Outcome 2]
+## Strategic Outcomes & Impact
+• [Outcome 1 with measurable impact]
+• [Outcome 2 with timeline implications]
+• [Outcome 3 with resource implications]
 
 ## Resource Requirements
-• [Budget/personnel needs]
+• [Budget allocation and justification]
+• [Personnel needs and timeline]
+• [Technology or infrastructure requirements]
 
 ## Next Steps for Leadership
-• [Action requiring executive attention]
-• [Timeline and owner]`
+• [Action requiring executive attention] - Owner: [Name] - Timeline: [Date]
+• [Strategic decision needed] - Owner: [Name] - Timeline: [Date]
+• [Resource approval required] - Owner: [Name] - Timeline: [Date]`
       },
 
       'action-items': {
@@ -77,17 +82,25 @@ Prioritize actionability and accountability in your summary.
 Be extremely specific about who does what by when.`,
 
         outputFormat: `
+# Action Items & Decisions Summary
+
 ## Immediate Actions (Next 1-2 weeks)
-• [Task] - Owner: [Name] - Due: [Date] - Priority: [High/Medium/Low]
+• [Specific task with clear deliverable] - Owner: [Name] - Due: [Date] - Priority: [High/Medium/Low]
+• [Task with measurable outcome] - Owner: [Name] - Due: [Date] - Priority: [High/Medium/Low]
+• [Follow-up action required] - Owner: [Name] - Due: [Date] - Priority: [High/Medium/Low]
 
 ## Short-term Actions (Next month)
-• [Task] - Owner: [Name] - Due: [Date] - Dependencies: [If any]
+• [Strategic task with timeline] - Owner: [Name] - Due: [Date] - Dependencies: [If any]
+• [Implementation task] - Owner: [Name] - Due: [Date] - Dependencies: [If any]
+• [Review or assessment task] - Owner: [Name] - Due: [Date] - Dependencies: [If any]
 
 ## Decisions Made
-• [Decision] - Owner: [Name] - Effective: [Date]
+• [Decision with business impact] - Owner: [Name] - Effective: [Date] - Impact: [Description]
+• [Technical or process decision] - Owner: [Name] - Effective: [Date] - Impact: [Description]
 
 ## Pending Decisions
-• [Decision needed] - Owner: [Name] - Due: [Date]
+• [Decision requiring input] - Owner: [Name] - Due: [Date] - Stakeholders: [Who needs to be involved]
+• [Strategic decision point] - Owner: [Name] - Due: [Date] - Stakeholders: [Who needs to be involved]`
 
 ## Follow-up Required
 • [Item] - Next step: [Action] - By: [Date]`

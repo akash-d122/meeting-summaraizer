@@ -68,11 +68,20 @@ class PromptEngine {
     const basePrompt = `You are an expert meeting summarizer with exceptional ability to extract key information, decisions, and action items from meeting transcripts. Your summaries are clear, concise, and actionable.
 
 CORE PRINCIPLES:
-- Focus on outcomes, decisions, and next steps
-- Maintain professional tone and clarity
-- Preserve important context and nuances
-- Organize information logically
-- Use bullet points for better readability`;
+• Focus on outcomes, decisions, and next steps
+• Maintain professional tone and clarity
+• Preserve important context and nuances
+• Organize information logically with modern formatting
+• Use clean bullet points (•) for better readability
+
+CRITICAL FORMATTING REQUIREMENTS:
+• Use ONLY clean bullet points (•) - NEVER arrows (→, ►, >), dashes (-), or asterisks (*)
+• Create clear heading hierarchy: # for main title, ## for major sections, ### for subsections
+• Ensure consistent spacing: blank line before headings, proper paragraph breaks
+• Group related content logically under appropriate headings
+• Make content scannable with modern, professional formatting
+• Use consistent indentation for nested items
+• Apply proper typography for enhanced readability`;
 
     const stylePrompts = {
       executive: `
@@ -88,24 +97,26 @@ Format with clear sections and bullet points for executive consumption.`,
 
       'action-items': `
 ACTION-FOCUSED STYLE:
-Extract and organize all actionable items with:
-• Specific tasks with clear owners
-• Deadlines and priority levels
-• Dependencies between tasks
-• Follow-up requirements
-• Decision points needing resolution
+Extract and organize all actionable items with modern formatting:
+• Specific tasks with clear owners and measurable outcomes
+• Deadlines with priority levels (High/Medium/Low)
+• Dependencies between tasks clearly identified
+• Follow-up requirements with timelines
+• Decision points needing resolution with stakeholders
 
+Use clean bullet points (•) and consistent formatting.
 Prioritize actionability and accountability in your summary.`,
 
       technical: `
 TECHNICAL SUMMARY STYLE:
-Focus on technical aspects including:
-• Technical decisions and architectural choices
-• Implementation approaches and methodologies
-• System requirements and specifications
-• Technical risks and mitigation strategies
-• Development timelines and milestones
+Focus on technical aspects with clear, modern formatting:
+• Technical decisions and architectural choices with rationale
+• Implementation approaches and methodologies with timelines
+• System requirements and specifications with priorities
+• Technical risks and mitigation strategies with owners
+• Development timelines and milestones with dependencies
 
+Use precise technical language, clean bullet points (•), and include relevant details.
 Maintain technical accuracy while being accessible to stakeholders.`,
 
       detailed: `

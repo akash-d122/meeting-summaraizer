@@ -96,13 +96,15 @@ class MeetingSummarizer {
         document.getElementById('edit-btn').addEventListener('click', () => this.toggleEdit());
         document.getElementById('preview-btn').addEventListener('click', () => this.previewSummary());
 
-        // Navigation events
-        document.getElementById('start-over-btn').addEventListener('click', () => {
-            this.startOver();
+        // Navigation events - use page reload for complete state reset
+        // Note: Page reload is used instead of JavaScript state reset to ensure
+        // all application state, event handlers, and UI elements are completely cleared
+        document.getElementById('start-over-btn').addEventListener('click', (e) => {
+            this.handleNavigationClick(e.target, 'start-over');
         });
 
-        document.getElementById('process-another-btn').addEventListener('click', () => {
-            this.startOver();
+        document.getElementById('process-another-btn').addEventListener('click', (e) => {
+            this.handleNavigationClick(e.target, 'process-another');
         });
     }
 
@@ -198,7 +200,50 @@ class MeetingSummarizer {
     }
 
     /**
+     * Handle navigation button clicks with user feedback
+     */
+    handleNavigationClick(button, action) {
+        // Store original button state
+        const originalText = button.textContent;
+        const originalDisabled = button.disabled;
+
+        // Disable button and show loading state
+        button.disabled = true;
+        button.textContent = 'Loading...';
+
+        // Call reload function
+        this.reloadToUpload();
+
+        // Fallback: restore button state if reload doesn't happen (shouldn't occur)
+        setTimeout(() => {
+            button.disabled = originalDisabled;
+            button.textContent = originalText;
+        }, 2000);
+    }
+
+    /**
+     * Reload page to return to upload flow with complete state reset
+     */
+    reloadToUpload() {
+        // Confirm if user wants to start over (except from success page)
+        if (this.workflowStep !== 'upload' && this.workflowStep !== 'success') {
+            const confirmed = confirm('Are you sure you want to start over? Any unsaved progress will be lost.');
+            if (!confirmed) return;
+        }
+
+        // Show loading message
+        this.showStatus('Reloading application...', 'info');
+
+        // Small delay to show the message, then reload
+        setTimeout(() => {
+            // Perform full page reload to ensure complete state reset
+            window.location.href = window.location.pathname;
+        }, 500);
+    }
+
+    /**
      * Start over - reset application state and return to upload
+     * @deprecated Use reloadToUpload() instead for complete state reset
      */
     startOver() {
         // Confirm if user wants to start over
@@ -239,17 +284,35 @@ class MeetingSummarizer {
         const uploadArea = document.getElementById('upload-area');
         uploadArea.classList.remove('dragover', 'uploaded');
 
-        // Reset upload content
+        // Reset upload content to match the original HTML structure
         const uploadContent = uploadArea.querySelector('.upload-content');
         uploadContent.innerHTML = `
-            <div class="upload-icon">📁</div>
-            <h3>Drop your meeting transcript here</h3>
-            <p>or <button type="button" id="browse-btn" class="browse-btn">browse files</button></p>
-            <small>Supported formats: TXT, MD, DOC, DOCX, PDF, RTF (max 10MB)</small>
+            <div class="upload-icon">📄</div>
+            <p>Drag and drop your meeting transcript here</p>
+            <p class="upload-subtitle">or click to browse files</p>
+            <p class="upload-subtitle" style="font-size: 0.8em; color: #6c757d;">Supported: .txt, .md, .doc, .docx, .pdf, .rtf (max 10MB)</p>
+            <input type="file" id="file-input" accept=".txt,.md,.doc,.docx,.pdf,.rtf,application/pdf,text/plain,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden>
+            <button type="button" id="browse-btn" class="btn btn-primary">Browse Files</button>
         `;
 
-        // Re-attach browse button event
-        document.getElementById('browse-btn').addEventListener('click', () => fileInput.click());
+        // Re-attach file input and browse button events
+        const newFileInput = document.getElementById('file-input');
+        const newBrowseBtn = document.getElementById('browse-btn');
+
+        newBrowseBtn.addEventListener('click', () => newFileInput.click());
+        newFileInput.addEventListener('change', (e) => this.handleFileSelect(e.target.files[0]));
+
+        // Clear file info and progress
+        const fileInfo = document.getElementById('file-info');
+        fileInfo.classList.add('hidden');
+        fileInfo.innerHTML = '';
+
+        const uploadProgress = document.getElementById('upload-progress');
+        uploadProgress.classList.add('hidden');
+        const progressFill = uploadProgress.querySelector('.progress-fill');
+        if (progressFill) {
+            progressFill.style.width = '0%';
+        }
 
         // Clear summary content
         document.getElementById('summary-content').innerHTML = '';
@@ -257,7 +320,7 @@ class MeetingSummarizer {
         // Clear email form
         document.getElementById('email-recipients').value = '';
         document.getElementById('email-subject').value = '';
-        document.getElementById('email-message').value = '';
+        document.getElementById('email-custom-message').value = '';
 
         // Reset form states
         document.getElementById('summary-style').value = 'executive';

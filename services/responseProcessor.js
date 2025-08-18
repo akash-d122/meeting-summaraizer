@@ -296,13 +296,115 @@ class ResponseProcessor {
     normalized = normalized
       .replace(/([.!?])\s*\n\s*([a-z])/g, '$1 $2')  // Fix broken sentences
       .replace(/([a-z])\s*\n\s*([A-Z])/g, '$1\n\n$2') // Fix paragraph breaks
-      .replace(/^[-•*]\s*/gm, '• ')                     // Standardize bullets
       .replace(/^\d+\.\s*/gm, (match, offset, string) => {
         const num = string.substring(0, offset).split(/^\d+\./gm).length;
         return `${num}. `;
       });
+
+    // Intelligently standardize bullets (only for actual list items)
+    normalized = this.standardizeBulletPoints(normalized);
     
     return normalized;
+  }
+
+  /**
+   * Intelligently standardize bullet points (only for actual list items)
+   */
+  standardizeBulletPoints(content) {
+    const lines = content.split('\n');
+    const processedLines = lines.map(line => {
+      const trimmedLine = line.trim();
+
+      // Skip empty lines
+      if (!trimmedLine) return line;
+
+      // Skip lines that don't start with bullet characters
+      if (!/^[-•*]\s+/.test(trimmedLine)) return line;
+
+      // Skip lines that look like headings or section titles
+      if (this.isHeadingOrTitle(trimmedLine)) return line;
+
+      // Skip lines that look like names or titles
+      if (this.isNameOrTitle(trimmedLine)) return line;
+
+      // Only standardize if it's actually a list item
+      if (this.isActualListItem(trimmedLine)) {
+        return line.replace(/^(\s*)[-•*]\s+/, '$1• ');
+      }
+
+      return line;
+    });
+
+    return processedLines.join('\n');
+  }
+
+  /**
+   * Check if a line looks like a heading or section title
+   */
+  isHeadingOrTitle(line) {
+    const cleanLine = line.replace(/^[-•*]\s*/, '').trim();
+
+    // Common heading patterns
+    const headingPatterns = [
+      /^(summary|overview|introduction|conclusion|next steps|action items|key decisions|recommendations|background|objectives|goals|agenda|attendees|participants|discussion|outcomes|results|findings|issues|risks|challenges|opportunities|timeline|schedule|budget|resources|technical|implementation|deployment|testing|review|approval|sign-off|follow-up|meeting notes|minutes)$/i,
+      /^(technical decisions|implementation approaches|architecture|design choices|risks and mitigation|key takeaways|main points|important notes|critical items|priority items|immediate actions|short-term|long-term|quarterly|monthly|weekly|daily)$/i,
+      /^[A-Z][A-Z\s]{2,}$/, // ALL CAPS titles
+      /^[A-Z][a-z]+(\s[A-Z][a-z]+)*:?$/, // Title Case headings
+      /^\d+\.\s*[A-Z][a-z]+/, // Numbered headings
+    ];
+
+    return headingPatterns.some(pattern => pattern.test(cleanLine));
+  }
+
+  /**
+   * Check if a line looks like a name or title (should not be converted to bullet point)
+   */
+  isNameOrTitle(line) {
+    const cleanLine = line.replace(/^[-•*]\s*/, '').trim();
+
+    // Patterns that indicate names or titles
+    const namePatterns = [
+      /^[A-Z][a-z]+ [A-Z][a-z]+$/, // "John Smith"
+      /^[A-Z][a-z]+ [A-Z]\.$/, // "John D."
+      /^[A-Z][a-z]+, [A-Z][a-z]+$/, // "Smith, John"
+      /^(Mr|Ms|Mrs|Dr|Prof)\. [A-Z][a-z]+/, // "Dr. Smith"
+      /^[A-Z][a-z]+ \([A-Z]+\)$/, // "John (CEO)"
+      /^[A-Z][A-Z\s]+$/, // "JOHN SMITH" or "CEO"
+      /^(CEO|CTO|CFO|VP|Director|Manager|Lead|Senior|Junior)/, // Titles
+      /^\d{1,2}:\d{2}\s*(AM|PM)?$/, // Time stamps
+      /^\d{1,2}\/\d{1,2}\/\d{2,4}$/, // Dates
+    ];
+
+    return namePatterns.some(pattern => pattern.test(cleanLine));
+  }
+
+  /**
+   * Check if a line is actually a list item (should be converted to bullet point)
+   */
+  isActualListItem(line) {
+    // Must start with a bullet point character
+    if (!/^[-•*]\s+/.test(line)) return false;
+
+    const content = line.replace(/^[-•*]\s+/, '').trim();
+
+    // Skip if it looks like a heading or title
+    if (this.isHeadingOrTitle(line) || this.isNameOrTitle(content)) return false;
+
+    // Skip if it's too short to be meaningful content
+    if (content.length < 3) return false;
+
+    // Skip if it's just a single word (likely a heading)
+    if (!/\s/.test(content) && content.length < 15) return false;
+
+    // Patterns that indicate actual list items
+    const listItemPatterns = [
+      /\b(will|should|must|need to|to|action|task|complete|finish|review|discuss|follow up|contact|send|create|update|implement|develop|test|deploy|schedule|plan|prepare|analyze|evaluate|consider|decide|approve|reject|postpone|delay|accelerate|prioritize|organize|coordinate|collaborate|communicate|report|document|record|track|monitor|measure|assess|validate|verify|confirm|ensure|guarantee|deliver|provide|supply|obtain|acquire|purchase|order|request|submit|present|demonstrate|explain|clarify|define|specify|identify|determine|establish|set up|configure|install|upgrade|maintain|support|troubleshoot|debug|fix|resolve|address|handle|manage|oversee|supervise|lead|guide|mentor|train|educate|inform|notify|alert|remind|warn|advise|recommend|suggest|propose|offer|volunteer|assign|delegate|allocate|distribute|share|exchange|transfer|move|relocate|migrate|backup|restore|archive|delete|remove|eliminate|reduce|increase|expand|extend|enhance|improve|optimize|streamline|automate|integrate|connect|link|associate|relate|compare|contrast|differentiate|distinguish|separate|isolate|extract|filter|sort|group|categorize|classify|organize|structure|format|style|design|layout|arrange|position|place|locate|find|search|discover|explore|investigate|research|study|examine|inspect|check|test|trial|experiment|prototype|model|simulate|estimate|calculate|compute|process|execute|run|operate|function|work|perform|achieve|accomplish|succeed|fail|error|issue|problem|challenge|obstacle|barrier|limitation|constraint|requirement|specification|criteria|standard|guideline|policy|procedure|process|method|approach|strategy|tactic|technique|tool|resource|asset|capability|skill|knowledge|experience|expertise|qualification|certification|license|permission|authorization|approval|consent|agreement|contract|deal|arrangement|partnership|collaboration|alliance|relationship|connection|network|community|group|team|organization|company|business|enterprise|corporation|institution|agency|department|division|unit|section|branch|office|facility|location|site|venue|place|area|region|zone|territory|market|segment|sector|industry|field|domain|discipline|subject|topic|theme|category|type|kind|sort|variety|option|choice|alternative|solution|answer|response|reply|feedback|comment|suggestion|recommendation|advice|guidance|direction|instruction|command|order|request|demand|requirement|need|want|desire|wish|goal|objective|target|aim|purpose|intention|plan|strategy|approach|method|technique|procedure|process|system|framework|structure|model|pattern|template|format|style|design|layout|configuration|setup|installation|deployment|implementation|execution|operation|maintenance|support|service|assistance|help|aid)[\s:]/i,
+      /\b(by|due|deadline|before|after|during|next|week|month|day|today|tomorrow|yesterday|monday|tuesday|wednesday|thursday|friday|saturday|sunday|january|february|march|april|may|june|july|august|september|october|november|december|q1|q2|q3|q4|quarter|year|annual|monthly|weekly|daily|hourly|asap|urgent|priority|high|medium|low|critical|important|significant|major|minor|small|large|big|huge|massive|tiny|minimal|maximum|minimum|optimal|best|worst|good|bad|excellent|poor|outstanding|average|typical|normal|standard|regular|special|unique|rare|common|frequent|occasional|seldom|never|always|often|sometimes|usually|generally|specifically|particularly|especially|mainly|primarily|mostly|largely|partly|partially|completely|fully|entirely|totally|absolutely|definitely|certainly|probably|possibly|maybe|perhaps|likely|unlikely|sure|unsure|confident|uncertain|clear|unclear|obvious|hidden|visible|invisible|public|private|internal|external|local|remote|online|offline|digital|physical|virtual|real|actual|potential|possible|impossible|feasible|unfeasible|practical|impractical|realistic|unrealistic|achievable|unachievable|manageable|unmanageable|simple|complex|easy|difficult|hard|soft|tough|gentle|rough|smooth|sharp|dull|bright|dark|light|heavy|fast|slow|quick|rapid|gradual|sudden|immediate|delayed|early|late|on-time|overdue|pending|completed|finished|done|started|begun|initiated|launched|opened|closed|ended|terminated|cancelled|postponed|rescheduled|updated|revised|modified|changed|altered|adjusted|improved|enhanced|upgraded|downgraded|reduced|increased|expanded|extended|shortened|lengthened|widened|narrowed|deepened|shallowed|raised|lowered|lifted|dropped|moved|shifted|transferred|relocated|migrated|copied|duplicated|replicated|cloned|backed|restored|archived|deleted|removed|eliminated|added|inserted|included|excluded|omitted|skipped|bypassed|avoided|prevented|blocked|allowed|permitted|authorized|approved|rejected|denied|accepted|declined|confirmed|verified|validated|checked|tested|reviewed|examined|inspected|monitored|tracked|measured|assessed|evaluated|analyzed|studied|researched|investigated|explored|discovered|found|located|identified|recognized|detected|noticed|observed|seen|heard|felt|experienced|encountered|met|contacted|reached|approached|addressed|handled|managed|dealt|coped|struggled|fought|battled|competed|collaborated|cooperated|worked|partnered|allied|joined|united|separated|divided|split|merged|combined|integrated|connected|linked|associated|related|compared|contrasted|differentiated|distinguished|matched|paired|grouped|categorized|classified|sorted|filtered|selected|chosen|picked|preferred|favored|liked|disliked|loved|hated|enjoyed|suffered|endured|tolerated|accepted|rejected|embraced|welcomed|greeted|introduced|presented|demonstrated|showed|displayed|exhibited|revealed|disclosed|shared|communicated|expressed|stated|said|told|spoke|talked|discussed|debated|argued|negotiated|bargained|agreed|disagreed|consented|objected|protested|complained|criticized|praised|complimented|thanked|apologized|excused|forgave|blamed|accused|defended|protected|supported|helped|assisted|aided|served|provided|supplied|offered|gave|donated|contributed|invested|spent|paid|bought|sold|traded|exchanged|swapped|replaced|substituted|switched|changed|converted|transformed|evolved|developed|grew|expanded|increased|decreased|reduced|minimized|maximized|optimized|improved|enhanced|upgraded|updated|revised|modified|adjusted|fine-tuned|calibrated|configured|customized|personalized|tailored|adapted|fitted|matched|suited|aligned|synchronized|coordinated|organized|arranged|planned|scheduled|timed|sequenced|ordered|prioritized|ranked|rated|scored|graded|evaluated|assessed|judged|decided|determined|resolved|solved|fixed|repaired|corrected|adjusted|tweaked|refined|polished|finished|completed|accomplished|achieved|succeeded|failed|lost|won|gained|earned|deserved|merited|qualified|certified|licensed|authorized|approved|validated|verified|confirmed|guaranteed|ensured|secured|protected|defended|maintained|preserved|conserved|saved|stored|kept|held|retained|released|freed|liberated|escaped|avoided|prevented|stopped|halted|paused|resumed|continued|proceeded|advanced|progressed|moved|traveled|journeyed|went|came|arrived|departed|left|stayed|remained|waited|delayed|hurried|rushed|slowed|accelerated|sped|crawled|walked|ran|jumped|climbed|fell|rose|lifted|dropped|pushed|pulled|carried|transported|delivered|shipped|sent|received|got|obtained|acquired|gained|lost|found|discovered|invented|created|made|built|constructed|assembled|manufactured|produced|generated|developed|designed|planned|conceived|imagined|thought|considered|pondered|reflected|meditated|contemplated|wondered|questioned|asked|answered|replied|responded|reacted|acted|behaved|performed|executed|operated|functioned|worked|served|helped|supported|assisted|guided|led|followed|accompanied|joined|left|abandoned|deserted|betrayed|trusted|believed|doubted|suspected|assumed|presumed|supposed|expected|anticipated|predicted|forecasted|estimated|calculated|computed|measured|counted|numbered|quantified|qualified|described|explained|clarified|defined|specified|detailed|outlined|summarized|concluded|inferred|deduced|reasoned|logic|logical|illogical|rational|irrational|reasonable|unreasonable|sensible|nonsensical|practical|impractical|useful|useless|helpful|harmful|beneficial|detrimental|positive|negative|good|bad|right|wrong|correct|incorrect|accurate|inaccurate|precise|imprecise|exact|approximate|close|far|near|distant|local|remote|here|there|everywhere|nowhere|somewhere|anywhere|inside|outside|above|below|over|under|beside|behind|front|back|left|right|north|south|east|west|up|down|in|out|on|off|yes|no|true|false|maybe|perhaps|possibly|probably|definitely|certainly|absolutely|relatively|comparatively|extremely|very|quite|rather|somewhat|slightly|barely|hardly|scarcely|almost|nearly|approximately|roughly|exactly|precisely|specifically|generally|usually|normally|typically|commonly|frequently|rarely|seldom|never|always|often|sometimes|occasionally|regularly|irregularly|consistently|inconsistently|constantly|continuously|intermittently|periodically|temporarily|permanently|briefly|shortly|quickly|slowly|rapidly|gradually|suddenly|immediately|instantly|eventually|finally|ultimately|initially|originally|previously|formerly|currently|presently|now|then|when|where|why|how|what|who|which|whose|whom)[\s:]/i,
+      /\b(responsible|owner|assigned|team|department|person|individual|group|committee|board|council|panel|jury|audience|crowd|public|community|society|organization|company|business|enterprise|corporation|institution|agency|government|authority|administration|management|leadership|staff|personnel|employees|workers|members|participants|attendees|guests|visitors|clients|customers|users|consumers|buyers|sellers|vendors|suppliers|partners|allies|competitors|rivals|opponents|enemies|friends|colleagues|peers|associates|contacts|connections|networks|relationships|family|relatives|parents|children|siblings|spouse|partner|neighbor|stranger|acquaintance|expert|specialist|professional|amateur|beginner|novice|veteran|senior|junior|supervisor|subordinate|boss|employee|worker|volunteer|intern|trainee|student|teacher|instructor|professor|doctor|nurse|lawyer|engineer|architect|designer|artist|writer|author|journalist|reporter|editor|publisher|producer|director|manager|coordinator|organizer|planner|scheduler|administrator|secretary|assistant|clerk|receptionist|operator|technician|mechanic|electrician|plumber|carpenter|painter|cleaner|guard|security|police|firefighter|paramedic|soldier|officer|captain|general|admiral|pilot|driver|conductor|guide|leader|follower|member|participant|observer|witness|judge|referee|umpire|coach|trainer|mentor|advisor|consultant|counselor|therapist|psychologist|psychiatrist|social|worker|volunteer|activist|advocate|representative|delegate|ambassador|diplomat|politician|candidate|voter|citizen|resident|inhabitant|native|foreigner|immigrant|refugee|tourist|traveler|visitor|guest|host|owner|tenant|landlord|buyer|seller|customer|client|patient|student|pupil|scholar|researcher|scientist|inventor|creator|artist|performer|entertainer|athlete|player|competitor|champion|winner|loser|participant|spectator|audience|fan|supporter|critic|reviewer|commentator|analyst|expert|specialist|generalist|professional|amateur|hobbyist|enthusiast|collector|dealer|trader|broker|agent|representative|spokesperson|advocate|defender|prosecutor|plaintiff|defendant|witness|victim|survivor|hero|villain|character|personality|individual|person|human|being|creature|animal|plant|object|thing|item|product|service|solution|problem|issue|challenge|opportunity|advantage|disadvantage|benefit|cost|price|value|worth|quality|quantity|amount|number|count|total|sum|average|mean|median|mode|range|minimum|maximum|limit|boundary|edge|border|margin|center|middle|core|heart|soul|spirit|mind|body|head|brain|face|eye|ear|nose|mouth|hand|arm|leg|foot|finger|toe|hair|skin|bone|muscle|blood|heart|lung|liver|kidney|stomach|intestine|nerve|cell|tissue|organ|system|structure|function|process|method|technique|procedure|approach|strategy|plan|goal|objective|target|aim|purpose|intention|reason|cause|effect|result|outcome|consequence|impact|influence|power|force|energy|strength|weakness|ability|capability|skill|talent|gift|knowledge|wisdom|intelligence|understanding|comprehension|awareness|consciousness|perception|sensation|feeling|emotion|mood|attitude|opinion|belief|faith|trust|confidence|doubt|fear|hope|love|hate|joy|sadness|anger|surprise|disgust|shame|guilt|pride|envy|jealousy|greed|generosity|kindness|cruelty|compassion|empathy|sympathy|apathy|indifference|interest|curiosity|boredom|excitement|enthusiasm|passion|obsession|addiction|habit|routine|custom|tradition|culture|society|civilization|community|group|team|organization|institution|system|network|structure|framework|foundation|base|basis|ground|floor|ceiling|roof|wall|door|window|entrance|exit|path|road|street|avenue|highway|bridge|tunnel|building|house|home|office|school|hospital|church|temple|mosque|synagogue|library|museum|theater|cinema|restaurant|hotel|store|shop|market|mall|park|garden|forest|mountain|hill|valley|river|lake|ocean|sea|beach|desert|island|continent|country|state|province|city|town|village|neighborhood|district|area|region|zone|territory|space|place|location|position|spot|point|site|venue|destination|origin|source|beginning|start|end|finish|conclusion|result|outcome|product|output|input|resource|material|substance|element|component|part|piece|section|segment|portion|fraction|percentage|ratio|proportion|rate|speed|velocity|acceleration|distance|length|width|height|depth|size|scale|dimension|measurement|unit|degree|level|grade|rank|status|position|role|function|job|task|duty|responsibility|obligation|commitment|promise|agreement|contract|deal|arrangement|plan|schedule|timeline|deadline|date|time|moment|instant|second|minute|hour|day|week|month|year|decade|century|millennium|past|present|future|history|tradition|heritage|legacy|memory|record|document|file|folder|directory|database|system|software|hardware|computer|machine|device|tool|instrument|equipment|apparatus|mechanism|engine|motor|generator|battery|fuel|energy|power|electricity|gas|oil|water|air|fire|earth|metal|wood|plastic|glass|paper|cloth|fabric|leather|rubber|stone|rock|mineral|crystal|diamond|gold|silver|copper|iron|steel|aluminum|carbon|oxygen|hydrogen|nitrogen|helium|neon|argon|krypton|xenon|radon|uranium|plutonium|radium|thorium|actinium|protactinium|neptunium|americium|curium|berkelium|californium|einsteinium|fermium|mendelevium|nobelium|lawrencium|rutherfordium|dubnium|seaborgium|bohrium|hassium|meitnerium|darmstadtium|roentgenium|copernicium|nihonium|flerovium|moscovium|livermorium|tennessine|oganesson)[\s:]/i,
+      /.{25,}/, // Longer content is more likely to be a list item
+    ];
+
+    return listItemPatterns.some(pattern => pattern.test(content));
   }
 
   /**

@@ -1,34 +1,55 @@
-<!-- Summary Style Information (minimal) -->
+<!-- Summary Style Information -->
 {{#if summaryStyle}}
-<div style="background-color: #f8f9fa; border-left: 4px solid #3498db; padding: 15px; margin-bottom: 25px; border-radius: 4px;">
-    <p style="margin: 0; font-size: 14px; color: #495057;">
-        <strong>Summary Style:</strong> {{summaryStyle}}
+<div style="background-color: #f8f9fa; border-left: 4px solid #3498db; padding: 20px; margin-bottom: 30px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <h3 style="margin: 0 0 8px 0; font-size: 16px; color: #2c3e50; font-weight: 600; letter-spacing: 0.3px;">
+        📊 Summary Configuration
+    </h3>
+    <p style="margin: 0; font-size: 14px; color: #495057; line-height: 1.5;">
+        <strong>Style:</strong> {{summaryStyle}}
     </p>
 </div>
 {{/if}}
 
 <!-- Custom Instructions (if provided) -->
 {{#if customInstructions}}
-<div style="background-color: #e3f2fd; border-left: 4px solid #2196f3; padding: 15px; margin-bottom: 25px; border-radius: 4px;">
-    <h4 style="margin: 0 0 8px 0; color: #1976d2; font-size: 14px;">Custom Instructions Applied:</h4>
-    <p style="margin: 0; font-style: italic; color: #424242;">{{customInstructions}}</p>
+<div style="background-color: #e3f2fd; border-left: 4px solid #2196f3; padding: 20px; margin-bottom: 30px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <h3 style="margin: 0 0 12px 0; color: #1976d2; font-size: 16px; font-weight: 600; letter-spacing: 0.3px;">
+        🎯 Custom Instructions Applied
+    </h3>
+    <div style="background-color: rgba(255,255,255,0.7); padding: 12px; border-radius: 4px; border: 1px solid rgba(33,150,243,0.2);">
+        <p style="margin: 0; font-style: italic; color: #424242; line-height: 1.6; font-size: 14px;">{{customInstructions}}</p>
+    </div>
 </div>
 {{/if}}
 
 <!-- Summary Content -->
-<div class="summary-content">
-    {{{summaryContent}}}
+<div style="background-color: #ffffff; border: 1px solid #e9ecef; border-radius: 6px; padding: 25px; margin-bottom: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+    <div class="summary-content" style="color: #2c3e50; line-height: 1.7; font-size: 15px;">
+        {{{summaryContent}}}
+    </div>
 </div>
 
 <!-- Action Items Highlight (only if extracted separately) -->
 {{#if actionItems}}
-<div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 25px 0; border-radius: 4px;">
-    <h4 style="margin: 0 0 10px 0; color: #856404; font-size: 16px;">⚡ Key Action Items</h4>
-    <ul style="margin: 0; padding-left: 20px; color: #495057;">
+<div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 20px; margin: 30px 0; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <h3 style="margin: 0 0 15px 0; color: #856404; font-size: 18px; font-weight: 600; letter-spacing: 0.3px;">
+        ⚡ Key Action Items
+    </h3>
+    <ul style="margin: 0; padding-left: 0; list-style: none; color: #495057;">
         {{#each actionItems}}
-        <li style="margin: 8px 0; line-height: 1.4;">
-            <strong style="color: #856404;">{{owner}}:</strong> {{task}}
-            {{#if deadline}}<em style="color: #6c757d;">(Due: {{deadline}})</em>{{/if}}
+        <li style="margin: 12px 0; padding: 12px; background-color: rgba(255,255,255,0.7); border-radius: 4px; border-left: 3px solid #ffc107; line-height: 1.6;">
+            <div style="display: flex; align-items: flex-start;">
+                <span style="color: #ffc107; font-size: 16px; margin-right: 8px;">•</span>
+                <div>
+                    <strong style="color: #856404; font-size: 14px;">{{owner}}:</strong>
+                    <span style="color: #495057; margin-left: 6px;">{{task}}</span>
+                    {{#if deadline}}
+                    <div style="margin-top: 4px;">
+                        <em style="color: #6c757d; font-size: 12px;">📅 Due: {{deadline}}</em>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
         </li>
         {{/each}}
     </ul>
