@@ -658,14 +658,14 @@ textarea.form-control {
 }
 
 .summary-content ul {
-    margin: 8px 0;
+    margin: 4px 0;
     padding-left: 0;
     list-style: none;
 }
 
 .summary-content li {
-    margin: 3px 0;
-    line-height: 1.5;
+    margin: 0px 0;
+    line-height: 1.4;
     padding-left: 24px;
     position: relative;
     color: #37474f;
