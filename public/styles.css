@@ -90,65 +90,6 @@ header p {
     margin-bottom: 20px;
 }
 
-/* File Info Display */
-.file-info-clean {
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 6px;
-    padding: 15px;
-    margin-top: 15px;
-}
-
-.file-info-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px solid #e9ecef;
-}
-
-.file-info-item:last-child {
-    border-bottom: none;
-}
-
-.file-info-item strong {
-    color: #495057;
-    font-weight: 600;
-}
-
-/* Summary Metadata (cleaned up) */
-.summary-metadata {
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 6px;
-    padding: 15px;
-    margin-bottom: 20px;
-}
-
-.metadata-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-}
-
-.metadata-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-}
-
-.metadata-label {
-    font-weight: 600;
-    color: #495057;
-    font-size: 14px;
-}
-
-.metadata-value {
-    color: #6c757d;
-    font-size: 14px;
-}
-
 /* Form Controls */
 .form-control {
     width: 100%;

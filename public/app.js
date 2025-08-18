@@ -9,7 +9,8 @@ class MeetingSummarizer {
         this.workflowStep = 'upload'; // Track workflow progress
 
         this.initializeEventListeners();
-        this.handleURLParameters(); // Handle email navigation parameters
+        this.handleURLParameters();
+        this.showSection('upload-section');
         this.loadExistingSession();
         this.updateNavigation();
     }
@@ -105,40 +106,6 @@ class MeetingSummarizer {
         });
     }
 
-    /**
-     * Handle URL parameters for email navigation
-     */
-    handleURLParameters() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const action = urlParams.get('action');
-
-        if (action) {
-            switch (action) {
-                case 'upload':
-                    // Direct user to upload new file
-                    this.startOver();
-                    this.showStatus('Ready to upload a new file', 'info');
-                    break;
-                case 'new':
-                    // Direct user to process another document
-                    this.startOver();
-                    this.showStatus('Ready to process another document', 'info');
-                    break;
-                default:
-                    // Unknown action, show upload section
-                    this.showSection('upload-section');
-                    break;
-            }
-
-            // Clean up URL parameters after handling
-            const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-            window.history.replaceState({}, document.title, cleanUrl);
-        } else {
-            // No parameters, show default section
-            this.showSection('upload-section');
-        }
-    }
-
     showSection(sectionId) {
         // Hide all sections
         document.querySelectorAll('.section').forEach(section => {
@@ -203,6 +170,30 @@ class MeetingSummarizer {
             navigation.style.display = 'none';
         } else {
             navigation.style.display = 'block';
+        }
+    }
+
+    /**
+     * Handle URL parameters from email navigation
+     */
+    handleURLParameters() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const action = urlParams.get('action');
+
+        if (action === 'upload' || action === 'new') {
+            // Clear URL parameters to avoid confusion
+            window.history.replaceState({}, document.title, window.location.pathname);
+
+            // Show appropriate message
+            if (action === 'upload') {
+                this.showStatus('Ready to upload a new file', 'info');
+            } else if (action === 'new') {
+                this.showStatus('Ready to process another document', 'info');
+            }
+
+            // Ensure we're on the upload section
+            this.workflowStep = 'upload';
+            this.resetApplicationState();
         }
     }
 
@@ -449,17 +440,9 @@ class MeetingSummarizer {
         const fileSize = (transcript.size / 1024).toFixed(2);
 
         fileInfo.innerHTML = `
-            <div class="file-info-clean">
-                <div class="file-info-item">
-                    <strong>📄 File:</strong> ${transcript.filename}
-                </div>
-                <div class="file-info-item">
-                    <strong>📊 Size:</strong> ${fileSize} KB
-                </div>
-                <div class="file-info-item">
-                    <strong>✅ Status:</strong> Ready for processing
-                </div>
-            </div>
+            <strong>Uploaded File:</strong> ${transcript.filename}<br>
+            <strong>Size:</strong> ${fileSize} KB<br>
+            <strong>Status:</strong> ${transcript.status}
         `;
         fileInfo.classList.remove('hidden');
     }
@@ -813,39 +796,21 @@ class MeetingSummarizer {
 
         // Convert markdown-style formatting to HTML
         let formatted = content
-            // Convert headers first
+            // Convert headers
             .replace(/^### (.*$)/gm, '<h3>$1</h3>')
             .replace(/^## (.*$)/gm, '<h2>$1</h2>')
             .replace(/^# (.*$)/gm, '<h1>$1</h1>')
-            // Remove bullet points from headers if they exist
-            .replace(/<h([1-6])>[\*\-\+•]\s*(.+?)<\/h\1>/g, '<h$1>$2</h$1>')
-            // Convert line breaks to paragraph breaks
+            // Convert bullet points
+            .replace(/^[•\-\*] (.*$)/gm, '<li>$1</li>')
+            // Convert numbered lists
+            .replace(/^\d+\. (.*$)/gm, '<li>$1</li>')
+            // Convert line breaks
             .replace(/\n\n/g, '</p><p>')
             .replace(/\n/g, '<br>');
 
-        // Wrap in paragraphs
+        // Wrap in paragraphs and handle lists
         formatted = '<p>' + formatted + '</p>';
-
-        // IMPROVED: Only convert actual list items to bullet points
-        // Look for lines that start with bullet markers and are clearly list items
-        formatted = formatted.replace(/<p>[\*\-\+•]\s*(.+?)<\/p>/g, '<li>$1</li>');
-        // Handle numbered lists
-        formatted = formatted.replace(/<p>\d+\.\s*(.+?)<\/p>/g, '<li>$1</li>');
-
-        // Wrap consecutive list items in ul tags
-        formatted = formatted.replace(/(<li>.*?<\/li>)(\s*<li>.*?<\/li>)*/gs, '<ul>$1</ul>');
-
-        // Clean up list formatting
-        formatted = formatted.replace(/<\/li>\s*<li>/g, '</li><li>');
-
-        // Remove empty paragraphs
-        formatted = formatted.replace(/<p>\s*<\/p>/g, '');
-
-        // Do NOT add bullet points to names, titles, or regular paragraph content
-        // Remove bullet points from names (pattern: First Last)
-        formatted = formatted.replace(/<li>([A-Z][a-z]+\s+[A-Z][a-z]+)\s*<\/li>/g, '<p>$1</p>');
-        // Remove bullet points from titles/labels (pattern: Text:)
-        formatted = formatted.replace(/<li>([^<]*?:)\s*<\/li>/g, '<p><strong>$1</strong></p>');
+        formatted = formatted.replace(/(<li>.*?<\/li>)/gs, '<ul>$1</ul>');
 
         return formatted;
     }
@@ -867,11 +832,12 @@ class MeetingSummarizer {
 
         let metadataHTML = '<div class="metadata-grid">';
 
-        // Summary style
+        // Only show user-relevant information
+        // Summary style if available
         if (summary.summaryStyle) {
             metadataHTML += `
                 <div class="metadata-item">
-                    <span class="metadata-label">📝 Style:</span>
+                    <span class="metadata-label">Summary Style:</span>
                     <span class="metadata-value">${this.formatSummaryStyle(summary.summaryStyle)}</span>
                 </div>
             `;
@@ -881,20 +847,10 @@ class MeetingSummarizer {
         const generatedAt = new Date().toLocaleString();
         metadataHTML += `
             <div class="metadata-item">
-                <span class="metadata-label">🕒 Generated:</span>
+                <span class="metadata-label">Generated:</span>
                 <span class="metadata-value">${generatedAt}</span>
             </div>
         `;
-
-        // Source file
-        if (this.currentTranscript && this.currentTranscript.filename) {
-            metadataHTML += `
-                <div class="metadata-item">
-                    <span class="metadata-label">📄 Source:</span>
-                    <span class="metadata-value">${this.currentTranscript.filename}</span>
-                </div>
-            `;
-        }
 
         metadataHTML += '</div>';
         metadataDiv.innerHTML = metadataHTML;
