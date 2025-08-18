@@ -169,8 +169,6 @@ class EmailService {
       // Remove bullet points from headings (common formatting issue)
       .replace(/<h([2-5])>•\s*(.+?)<\/h\1>/g, '<h$1>$2</h$1>')
       .replace(/<h([2-5])>[\*\-\+]\s*(.+?)<\/h\1>/g, '<h$1>$2</h$1>')
-      // Clean up bullet points in content (standardize to •)
-      .replace(/^\s*[\*\-\+]\s+/gm, '• ')
       // Remove extra whitespace
       .replace(/\n\s*\n\s*\n/g, '\n\n')
       // Clean up HTML tags that might be malformed
@@ -181,8 +179,11 @@ class EmailService {
       .replace(/^(?!<h[2-5]>)(.+)$/gm, '<p>$1</p>')
       // Clean up empty paragraphs
       .replace(/<p>\s*<\/p>/g, '')
-      // Fix bullet point formatting in paragraphs
-      .replace(/<p>•\s*(.+?)<\/p>/g, '<li>$1</li>')
+      // IMPROVED: Only convert lines that are actually list items to bullet points
+      // Look for lines that start with bullet markers and are clearly list items
+      .replace(/<p>[\*\-\+•]\s*(.+?)<\/p>/g, '<li>$1</li>')
+      // Also handle numbered lists
+      .replace(/<p>\d+\.\s*(.+?)<\/p>/g, '<li>$1</li>')
       // Wrap consecutive list items in ul tags
       .replace(/(<li>.*?<\/li>)(\s*<li>.*?<\/li>)*/g, '<ul>$&</ul>')
       // Clean up any remaining issues
@@ -193,6 +194,10 @@ class EmailService {
       // Clean up duplicate headings or action items sections
       .replace(/<h([2-5])>.*?action\s*items.*?<\/h\1>/gi, '')
       .replace(/<h([2-5])>.*?key\s*action\s*items.*?<\/h\1>/gi, '')
+      // IMPORTANT: Do NOT add bullet points to regular paragraph content
+      // Remove any bullet points that were incorrectly added to names, titles, or regular text
+      .replace(/<p>•\s*([A-Z][a-z]+\s+[A-Z][a-z]+)\s*<\/p>/g, '<p>$1</p>') // Names
+      .replace(/<p>•\s*([A-Z][^<]*?:)\s*<\/p>/g, '<p><strong>$1</strong></p>') // Titles/labels
       .trim();
 
     return cleaned;

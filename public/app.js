@@ -9,7 +9,7 @@ class MeetingSummarizer {
         this.workflowStep = 'upload'; // Track workflow progress
 
         this.initializeEventListeners();
-        this.showSection('upload-section');
+        this.handleURLParameters(); // Handle email navigation parameters
         this.loadExistingSession();
         this.updateNavigation();
     }
@@ -103,6 +103,40 @@ class MeetingSummarizer {
         document.getElementById('process-another-btn').addEventListener('click', () => {
             this.startOver();
         });
+    }
+
+    /**
+     * Handle URL parameters for email navigation
+     */
+    handleURLParameters() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const action = urlParams.get('action');
+
+        if (action) {
+            switch (action) {
+                case 'upload':
+                    // Direct user to upload new file
+                    this.startOver();
+                    this.showStatus('Ready to upload a new file', 'info');
+                    break;
+                case 'new':
+                    // Direct user to process another document
+                    this.startOver();
+                    this.showStatus('Ready to process another document', 'info');
+                    break;
+                default:
+                    // Unknown action, show upload section
+                    this.showSection('upload-section');
+                    break;
+            }
+
+            // Clean up URL parameters after handling
+            const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            window.history.replaceState({}, document.title, cleanUrl);
+        } else {
+            // No parameters, show default section
+            this.showSection('upload-section');
+        }
     }
 
     showSection(sectionId) {
@@ -415,11 +449,17 @@ class MeetingSummarizer {
         const fileSize = (transcript.size / 1024).toFixed(2);
 
         fileInfo.innerHTML = `
-            <strong>Uploaded File:</strong> ${transcript.filename}<br>
-            <strong>Size:</strong> ${fileSize} KB<br>
-            <strong>Status:</strong> ${transcript.status}<br>
-            <strong>Content Length:</strong> ${transcript.contentLength || 0} characters<br>
-            <strong>Token Count:</strong> ${transcript.tokenCount || 0} tokens
+            <div class="file-info-clean">
+                <div class="file-info-item">
+                    <strong>📄 File:</strong> ${transcript.filename}
+                </div>
+                <div class="file-info-item">
+                    <strong>📊 Size:</strong> ${fileSize} KB
+                </div>
+                <div class="file-info-item">
+                    <strong>✅ Status:</strong> Ready for processing
+                </div>
+            </div>
         `;
         fileInfo.classList.remove('hidden');
     }
@@ -773,27 +813,45 @@ class MeetingSummarizer {
 
         // Convert markdown-style formatting to HTML
         let formatted = content
-            // Convert headers
+            // Convert headers first
             .replace(/^### (.*$)/gm, '<h3>$1</h3>')
             .replace(/^## (.*$)/gm, '<h2>$1</h2>')
             .replace(/^# (.*$)/gm, '<h1>$1</h1>')
-            // Convert bullet points
-            .replace(/^[•\-\*] (.*$)/gm, '<li>$1</li>')
-            // Convert numbered lists
-            .replace(/^\d+\. (.*$)/gm, '<li>$1</li>')
-            // Convert line breaks
+            // Remove bullet points from headers if they exist
+            .replace(/<h([1-6])>[\*\-\+•]\s*(.+?)<\/h\1>/g, '<h$1>$2</h$1>')
+            // Convert line breaks to paragraph breaks
             .replace(/\n\n/g, '</p><p>')
             .replace(/\n/g, '<br>');
 
-        // Wrap in paragraphs and handle lists
+        // Wrap in paragraphs
         formatted = '<p>' + formatted + '</p>';
-        formatted = formatted.replace(/(<li>.*?<\/li>)/gs, '<ul>$1</ul>');
+
+        // IMPROVED: Only convert actual list items to bullet points
+        // Look for lines that start with bullet markers and are clearly list items
+        formatted = formatted.replace(/<p>[\*\-\+•]\s*(.+?)<\/p>/g, '<li>$1</li>');
+        // Handle numbered lists
+        formatted = formatted.replace(/<p>\d+\.\s*(.+?)<\/p>/g, '<li>$1</li>');
+
+        // Wrap consecutive list items in ul tags
+        formatted = formatted.replace(/(<li>.*?<\/li>)(\s*<li>.*?<\/li>)*/gs, '<ul>$1</ul>');
+
+        // Clean up list formatting
+        formatted = formatted.replace(/<\/li>\s*<li>/g, '</li><li>');
+
+        // Remove empty paragraphs
+        formatted = formatted.replace(/<p>\s*<\/p>/g, '');
+
+        // Do NOT add bullet points to names, titles, or regular paragraph content
+        // Remove bullet points from names (pattern: First Last)
+        formatted = formatted.replace(/<li>([A-Z][a-z]+\s+[A-Z][a-z]+)\s*<\/li>/g, '<p>$1</p>');
+        // Remove bullet points from titles/labels (pattern: Text:)
+        formatted = formatted.replace(/<li>([^<]*?:)\s*<\/li>/g, '<p><strong>$1</strong></p>');
 
         return formatted;
     }
 
     /**
-     * Display summary metadata (cost, processing time, etc.)
+     * Display summary metadata (user-relevant information only)
      */
     displaySummaryMetadata(summary) {
         // Create or update metadata display
@@ -809,50 +867,51 @@ class MeetingSummarizer {
 
         let metadataHTML = '<div class="metadata-grid">';
 
-        // Note: Quality information removed from display but still calculated in backend
-
-        // Processing information
-        if (summary.processingTime) {
+        // Summary style
+        if (summary.summaryStyle) {
             metadataHTML += `
                 <div class="metadata-item">
-                    <span class="metadata-label">Processing Time:</span>
-                    <span class="metadata-value">${(summary.processingTime / 1000).toFixed(1)}s</span>
+                    <span class="metadata-label">📝 Style:</span>
+                    <span class="metadata-value">${this.formatSummaryStyle(summary.summaryStyle)}</span>
                 </div>
             `;
         }
 
-        // Cost information
-        if (summary.cost) {
-            metadataHTML += `
-                <div class="metadata-item">
-                    <span class="metadata-label">Cost:</span>
-                    <span class="metadata-value">$${summary.cost.toFixed(6)}</span>
-                </div>
-            `;
-        }
+        // Generation timestamp
+        const generatedAt = new Date().toLocaleString();
+        metadataHTML += `
+            <div class="metadata-item">
+                <span class="metadata-label">🕒 Generated:</span>
+                <span class="metadata-value">${generatedAt}</span>
+            </div>
+        `;
 
-        // Token usage
-        if (summary.tokenUsage) {
+        // Source file
+        if (this.currentTranscript && this.currentTranscript.filename) {
             metadataHTML += `
                 <div class="metadata-item">
-                    <span class="metadata-label">Tokens:</span>
-                    <span class="metadata-value">${summary.tokenUsage.totalTokens}</span>
-                </div>
-            `;
-        }
-
-        // Model used
-        if (summary.model) {
-            metadataHTML += `
-                <div class="metadata-item">
-                    <span class="metadata-label">Model:</span>
-                    <span class="metadata-value">${summary.model}</span>
+                    <span class="metadata-label">📄 Source:</span>
+                    <span class="metadata-value">${this.currentTranscript.filename}</span>
                 </div>
             `;
         }
 
         metadataHTML += '</div>';
         metadataDiv.innerHTML = metadataHTML;
+    }
+
+    /**
+     * Format summary style for display
+     */
+    formatSummaryStyle(style) {
+        const styles = {
+            'executive': 'Executive Summary',
+            'action-items': 'Action Items',
+            'technical': 'Technical Summary',
+            'detailed': 'Detailed Summary',
+            'custom': 'Custom Format'
+        };
+        return styles[style] || style;
     }
 
     /**
